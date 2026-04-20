@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>edrone — Kalkulator Oferty</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent: #ECFF5A;
+      --accent-dim: rgba(236,255,90,.12);
+      --text: #F0F0F0;
+      --muted: #888;
+      --border: #2A2A2A;
+      --bg: #1E1E1E;
+      --card: #181818;
+      --card2: #1E1E1E;
+      --radius: 16px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      background: #111;
+      border-bottom: 1px solid var(--border);
+      padding: 16px 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .topbar-logo {
+      width: 32px; height: 32px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .topbar-logo svg { width: 18px; height: 18px; fill: #0F0F0F; }
+    .topbar h1 { font-size: 15px; font-weight: 700; color: var(--text); }
+    .topbar span { font-size: 13px; color: var(--muted); margin-left: 4px; }
+
+    /* ── Layout ── */
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 32px;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+      align-items: start;
+    }
+
+    .modules { display: flex; flex-direction: column; gap: 16px; }
+
+    /* ── Module card ── */
+    .mcard {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .mcard-head {
+      padding: 22px 28px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .mcard-head-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .mcard-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; color: var(--text); }
+    .mcard-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+    .badge-included {
+      background: var(--accent);
+      color: #0F0F0F;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+      letter-spacing: .2px;
+    }
+    .badge-optional {
+      background: var(--accent-dim);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+      letter-spacing: .2px;
+    }
+
+    .mcard-body { padding: 22px 28px 24px; }
+
+    /* slider row */
+    .slider-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+    .slider-range-label {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .slider-range-label strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+    .slider-price {
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -.5px;
+    }
+    .slider-price-sub {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: right;
+      margin-top: -2px;
+    }
+
+    /* range input */
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: #2A2A2A;
+      outline: none;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 3px #181818, 0 0 0 5px rgba(236,255,90,.3);
+      cursor: pointer;
+      transition: box-shadow .15s;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      box-shadow: 0 0 0 3px #181818, 0 0 0 7px rgba(236,255,90,.45);
+    }
+    input[type=range]::-moz-range-thumb {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 3px solid #181818;
+      cursor: pointer;
+    }
+
+    .slider-track-wrap { position: relative; }
+    .slider-fill {
+      position: absolute;
+      top: 50%; left: 0;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--accent);
+      pointer-events: none;
+      transform: translateY(-50%);
+    }
+
+    .slider-limits {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* toggle row */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 28px;
+      border-top: 1px solid var(--border);
+      background: #141414;
+    }
+    .toggle-row label { font-size: 13px; color: var(--muted); cursor: pointer; }
+    .toggle-switch {
+      position: relative; width: 44px; height: 24px; cursor: pointer;
+    }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-track {
+      position: absolute; inset: 0;
+      background: #333;
+      border-radius: 12px;
+      transition: background .2s;
+    }
+    .toggle-thumb {
+      position: absolute;
+      left: 3px; top: 3px;
+      width: 18px; height: 18px;
+      background: #888;
+      border-radius: 50%;
+      transition: transform .2s, background .2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,.5);
+    }
+    .toggle-switch input:checked ~ .toggle-track { background: var(--accent-dim); }
+    .toggle-switch input:checked ~ .toggle-thumb { transform: translateX(20px); background: var(--accent); }
+
+    .mcard-body.disabled { opacity: .35; pointer-events: none; }
+
+    /* ── Sticky summary ── */
+    .summary-wrap {
+      position: sticky;
+      top: 24px;
+    }
+    .summary {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .summary-head {
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .summary-total-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -.5px;
+    }
+    .summary-total-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .summary-total-sub span {
+      background: #222;
+      font-size: 11px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-left: 4px;
+      color: var(--muted);
+    }
+
+    .summary-rows { padding: 14px 22px; display: flex; flex-direction: column; gap: 12px; }
+    .srow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+    }
+    .srow-label { color: var(--text); }
+    .srow-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .srow-value { font-weight: 600; text-align: right; color: var(--text); }
+    .srow-value.off { color: var(--muted); font-size: 12px; font-weight: 400; }
+
+    .summary-divider { height: 1px; background: var(--border); margin: 0 22px; }
+
+    .summary-footer { padding: 16px 22px 20px; }
+    .summary-footer .total-row {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 4px;
+    }
+    .summary-footer .total-row .big { font-size: 26px; font-weight: 800; color: var(--accent); }
+    .summary-footer .vat-note { font-size: 11px; color: var(--muted); }
+
+    .cta-btn {
+      margin-top: 14px;
+      width: 100%;
+      padding: 13px;
+      background: var(--accent);
+      color: #0F0F0F;
+      font-size: 14px;
+      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: inherit;
+      letter-spacing: .2px;
+      transition: opacity .15s;
+    }
+    .cta-btn:hover { opacity: .85; }
+    .cta-btn.copied { background: #4ADE80; }
+
+    /* industry selector */
+    .industry-bar {
+      background: #111;
+      border-bottom: 1px solid var(--border);
+      padding: 14px 40px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .industry-bar label {
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      color: var(--muted);
+    }
+    .industry-select {
+      flex: 1;
+      max-width: 380px;
+      padding: 8px 36px 8px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: inherit;
+      color: var(--text);
+      background: #1A1A1A url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 12px center;
+      -webkit-appearance: none;
+      appearance: none;
+      cursor: pointer;
+      transition: border-color .15s;
+    }
+    .industry-select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(236,255,90,.1);
+    }
+    .industry-select option { background: #1A1A1A; }
+
+    /* ── Stats section ── */
+    .stats-section {
+      background: #0F0F0F;
+      padding: 56px 24px 64px;
+      display: none;
+    }
+    .stats-section.visible { display: block; }
+    .stats-inner {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+    .stats-pretitle {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 36px;
+      letter-spacing: .3px;
+    }
+    .stats-grid {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    .stat-block { flex: 1; padding: 0 8px; }
+    .stat-divider {
+      width: 1px;
+      height: 100px;
+      background: #333;
+      flex-shrink: 0;
+      margin: 0 40px;
+    }
+    .stat-value {
+      font-size: 64px;
+      font-weight: 900;
+      color: #ECFF5A;
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+    .stat-label {
+      font-size: 15px;
+      font-weight: 600;
+      color: #E5E7EB;
+      margin-bottom: 6px;
+    }
+    .stat-desc {
+      font-size: 13px;
+      color: #6B7280;
+      line-height: 1.5;
+      max-width: 320px;
+    }
+    .stats-note {
+      margin-top: 40px;
+      font-size: 12px;
+      color: #4B5563;
+    }
+
+    @media (max-width: 700px) {
+      .layout { grid-template-columns: 1fr; padding: 20px 16px 60px; }
+      .summary-wrap { position: static; }
+      .topbar { padding: 14px 20px; }
+      .stats-grid { flex-direction: column; gap: 40px; }
+      .stat-divider { display: none; }
+      .stat-value { font-size: 48px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">
+    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+  </div>
+  <h1>edrone</h1>
+  <span>Kalkulator oferty handlowej</span>
+</div>
+
+<div class="industry-bar">
+  <label for="industrySelect">Branża klienta</label>
+  <select class="industry-select" id="industrySelect">
+    <option value="">— wybierz branżę —</option>
+    <option>Zwierzęta i akcesoria dla zwierząt</option>
+    <option>Sztuka i rozrywka</option>
+    <option>Artykuły dla dorosłych</option>
+    <option>Biznes i przemysł</option>
+    <option>Ubrania i akcesoria</option>
+    <option>Elektronika</option>
+    <option>Sprzęt</option>
+    <option>Wydarzenia</option>
+    <option>Jedzenie, napoje i tytoń</option>
+    <option>Meble</option>
+    <option>Gadżety i reklama</option>
+    <option>Gry i zabawki</option>
+    <option>Zdrowie i uroda</option>
+    <option>Zdrowie i dobrostan</option>
+    <option>Dom i ogród</option>
+    <option>Biżuteria</option>
+    <option>Dzieci i niemowlęta</option>
+    <option>Głoska bezdźwięczna</option>
+    <option>Materiały biurowe</option>
+    <option>Inny</option>
+    <option>Artykuły religijne i dewocyjne</option>
+    <option>Sprzęt sportowy</option>
+    <option>Akcesoria podróżne</option>
+    <option>Pojazdy i części</option>
+  </select>
+</div>
+
+<div class="layout">
+
+  <!-- ── LEFT: modules ── -->
+  <div class="modules">
+
+    <!-- MODULE: Licencja -->
+    <div class="mcard">
+      <div class="mcard-head">
+        <div class="mcard-head-row">
+          <div>
+            <div class="mcard-title">Licencja</div>
+            <div class="mcard-desc">Dostęp do platformy edrone — email marketing, automatyzacje, scenariusze i analityka.</div>
+          </div>
+          <div class="badge-included">Wymagana</div>
+        </div>
+      </div>
+      <div class="mcard-body" id="licBody">
+        <div class="slider-meta">
+          <div>
+            <div class="slider-range-label">kontakty w bazie</div>
+            <div class="slider-range-label"><strong id="licRangeLabel">do 250</strong></div>
+          </div>
+          <div style="text-align:right">
+            <div class="slider-price" id="licPriceDisplay">100,00 zł</div>
+            <div class="slider-price-sub">/ miesiąc</div>
+          </div>
+        </div>
+        <div class="slider-track-wrap">
+          <div class="slider-fill" id="licFill"></div>
+          <input type="range" id="licSlider" min="0" max="0" value="0" step="1" />
+        </div>
+        <div class="slider-limits">
+          <span>250</span>
+          <span>1 200 000</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE: SMS -->
+    <div class="mcard">
+      <div class="mcard-head">
+        <div class="mcard-head-row">
+          <div>
+            <div class="mcard-title">SMS</div>
+            <div class="mcard-desc">Kampanie i automatyzacje SMS. Cena za wiadomość zależy od wolumenu miesięcznego.</div>
+          </div>
+          <div class="badge-optional">Opcjonalny</div>
+        </div>
+      </div>
+      <div class="mcard-body" id="smsBody">
+        <div class="slider-meta">
+          <div>
+            <div class="slider-range-label">wiadomości / miesiąc</div>
+            <div class="slider-range-label"><strong id="smsRangeLabel">1 000</strong></div>
+          </div>
+          <div style="text-align:right">
+            <div class="slider-price" id="smsPriceDisplay">150,00 zł</div>
+            <div class="slider-price-sub">/ miesiąc</div>
+          </div>
+        </div>
+        <div class="slider-track-wrap">
+          <div class="slider-fill" id="smsFill"></div>
+          <input type="range" id="smsSlider" min="0" max="0" value="0" step="1" />
+        </div>
+        <div class="slider-limits">
+          <span>0</span>
+          <span>100 000</span>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <label for="smsToggle">Włącz moduł SMS</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="smsToggle" checked />
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </label>
+      </div>
+    </div>
+
+    <!-- MODULE: WhatsApp -->
+    <div class="mcard">
+      <div class="mcard-head">
+        <div class="mcard-head-row">
+          <div>
+            <div class="mcard-title">WhatsApp</div>
+            <div class="mcard-desc">Kampanie i automatyzacje WhatsApp Business. Cena za wiadomość zależy od wolumenu.</div>
+          </div>
+          <div class="badge-optional">Opcjonalny</div>
+        </div>
+      </div>
+      <div class="mcard-body" id="waBody">
+        <div class="slider-meta">
+          <div>
+            <div class="slider-range-label">wiadomości / miesiąc</div>
+            <div class="slider-range-label"><strong id="waRangeLabel">1 000</strong></div>
+          </div>
+          <div style="text-align:right">
+            <div class="slider-price" id="waPriceDisplay">510,00 zł</div>
+            <div class="slider-price-sub">/ miesiąc</div>
+          </div>
+        </div>
+        <div class="slider-track-wrap">
+          <div class="slider-fill" id="waFill"></div>
+          <input type="range" id="waSlider" min="0" max="0" value="0" step="1" />
+        </div>
+        <div class="slider-limits">
+          <span>0</span>
+          <span>10 000</span>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <label for="waToggle">Włącz moduł WhatsApp</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="waToggle" checked />
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </label>
+      </div>
+    </div>
+
+    <!-- MODULE: edrone Reviews -->
+    <div class="mcard">
+      <div class="mcard-head">
+        <div class="mcard-head-row">
+          <div>
+            <div class="mcard-title">edrone Reviews</div>
+            <div class="mcard-desc">Personalizowane rekomendacje produktowe. Cennik kaskadowy — każdy przedział liczy się osobno.</div>
+          </div>
+          <div class="badge-optional">Opcjonalny</div>
+        </div>
+      </div>
+      <div class="mcard-body" id="recBody">
+        <div class="slider-meta">
+          <div>
+            <div class="slider-range-label">zamówień / miesiąc</div>
+            <div class="slider-range-label"><strong id="recRangeLabel">0</strong></div>
+          </div>
+          <div style="text-align:right">
+            <div class="slider-price" id="recPriceDisplay">0,00 zł</div>
+            <div class="slider-price-sub">/ miesiąc</div>
+          </div>
+        </div>
+        <div class="slider-track-wrap">
+          <div class="slider-fill" id="recFill"></div>
+          <input type="range" id="recSlider" min="0" max="0" value="0" step="1" />
+        </div>
+        <div class="slider-limits">
+          <span>0</span>
+          <span>20 000</span>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <label for="recToggle">Włącz moduł Rekomendacji</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="recToggle" checked />
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </label>
+      </div>
+    </div>
+
+    <!-- MODULE: edrone AI chat -->
+    <div class="mcard">
+      <div class="mcard-head">
+        <div class="mcard-head-row">
+          <div>
+            <div class="mcard-title">edrone AI chat</div>
+            <div class="mcard-desc">Chatbot oparty na AI. Opłata stała 49 zł + 8 zł za każde 1 000 wizyt.</div>
+          </div>
+          <div class="badge-optional">Opcjonalny</div>
+        </div>
+      </div>
+      <div class="mcard-body" id="aiBody">
+        <div class="slider-meta">
+          <div>
+            <div class="slider-range-label">wizyt / miesiąc</div>
+            <div class="slider-range-label"><strong id="aiRangeLabel">0</strong></div>
+          </div>
+          <div style="text-align:right">
+            <div class="slider-price" id="aiPriceDisplay">0,00 zł</div>
+            <div class="slider-price-sub">/ miesiąc</div>
+          </div>
+        </div>
+        <div class="slider-track-wrap">
+          <div class="slider-fill" id="aiFill"></div>
+          <input type="range" id="aiSlider" min="0" max="0" value="0" step="1" />
+        </div>
+        <div class="slider-limits">
+          <span>0</span>
+          <span>200 000</span>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <label for="aiToggle">Włącz moduł edrone AI chat</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="aiToggle" checked />
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </label>
+      </div>
+    </div>
+
+    <!-- MODULE: Ramki rekomendacji AI -->
+    <div class="mcard">
+      <div class="mcard-head">
+        <div class="mcard-head-row">
+          <div>
+            <div class="mcard-title">Ramki rekomendacji AI</div>
+            <div class="mcard-desc">Personalizowane ramki produktowe oparte na AI. Opłata stała 49 zł + 6 zł za każde 1 000 wyświetleń.</div>
+          </div>
+          <div class="badge-optional">Opcjonalny</div>
+        </div>
+      </div>
+      <div class="mcard-body" id="rfBody">
+        <div class="slider-meta">
+          <div>
+            <div class="slider-range-label">wyświetleń / miesiąc</div>
+            <div class="slider-range-label"><strong id="rfRangeLabel">0</strong></div>
+          </div>
+          <div style="text-align:right">
+            <div class="slider-price" id="rfPriceDisplay">0,00 zł</div>
+            <div class="slider-price-sub">/ miesiąc</div>
+          </div>
+        </div>
+        <div class="slider-track-wrap">
+          <div class="slider-fill" id="rfFill"></div>
+          <input type="range" id="rfSlider" min="0" max="0" value="0" step="1" />
+        </div>
+        <div class="slider-limits">
+          <span>0</span>
+          <span>200 000</span>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <label for="rfToggle">Włącz moduł Ramek rekomendacji AI</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="rfToggle" checked />
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </label>
+      </div>
+    </div>
+
+  </div><!-- /modules -->
+
+  <!-- ── RIGHT: summary ── -->
+  <div class="summary-wrap">
+    <div class="summary">
+      <div class="summary-head">
+        <div class="summary-total-value" id="summaryTotal">—</div>
+        <div class="summary-total-sub">miesięcznie <span>netto</span></div>
+      </div>
+
+      <div class="summary-rows">
+        <div class="srow">
+          <div>
+            <div class="srow-label">Licencja</div>
+            <div class="srow-sub" id="sumLicSub"></div>
+          </div>
+          <div class="srow-value" id="sumLic">—</div>
+        </div>
+        <div class="srow">
+          <div>
+            <div class="srow-label">SMS</div>
+            <div class="srow-sub" id="sumSmsSub"></div>
+          </div>
+          <div class="srow-value" id="sumSms">—</div>
+        </div>
+        <div class="srow">
+          <div>
+            <div class="srow-label">WhatsApp</div>
+            <div class="srow-sub" id="sumWaSub"></div>
+          </div>
+          <div class="srow-value" id="sumWa">—</div>
+        </div>
+        <div class="srow">
+          <div>
+            <div class="srow-label">edrone Reviews</div>
+            <div class="srow-sub" id="sumRecSub"></div>
+          </div>
+          <div class="srow-value" id="sumRec">—</div>
+        </div>
+        <div class="srow">
+          <div>
+            <div class="srow-label">edrone AI chat</div>
+            <div class="srow-sub" id="sumAiSub"></div>
+          </div>
+          <div class="srow-value" id="sumAi">—</div>
+        </div>
+        <div class="srow">
+          <div>
+            <div class="srow-label">Ramki rekomendacji AI</div>
+            <div class="srow-sub" id="sumRfSub"></div>
+          </div>
+          <div class="srow-value" id="sumRf">—</div>
+        </div>
+      </div>
+
+      <div class="summary-divider"></div>
+
+      <div class="summary-footer">
+        <div class="total-row">
+          <span style="font-size:14px;font-weight:600">Łączna kwota</span>
+          <span class="big" id="summaryTotalBig">—</span>
+        </div>
+        <div class="vat-note">Ceny netto, bez VAT (23%)</div>
+        <button class="cta-btn" id="copyBtn" onclick="copyQuote()">Skopiuj wycenę</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /layout -->
+
+<!-- ── STATS SECTION ── -->
+<div class="stats-section" id="statsSection">
+  <div class="stats-inner">
+    <div class="stats-pretitle" id="statsPretitle"></div>
+    <div class="stats-grid">
+      <div class="stat-block">
+        <div class="stat-value" id="statRevenue">—</div>
+        <div class="stat-label">Potencjalny miesięczny obrót</div>
+        <div class="stat-desc">Szacunkowy obrót klientów z bazy tej wielkości w Twojej branży</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-block">
+        <div class="stat-value" id="statRoi">—</div>
+        <div class="stat-label">ROI z edrone</div>
+        <div class="stat-desc">Stosunek potencjalnego obrotu do miesięcznego kosztu licencji</div>
+      </div>
+    </div>
+    <div class="stats-note">Wartości szacunkowe, obliczone na podstawie średnich danych branżowych edrone.</div>
+  </div>
+</div>
+
+<script>
+// ── Pricing data ──────────────────────────────────────────────────────────
+
+const LICENSE_TIERS = [
+  [0,250,100],[251,300,120],[301,350,140],[351,400,160],[401,450,180],
+  [451,500,195],[501,550,215],[551,600,235],[601,650,255],[651,700,275],
+  [701,750,295],[751,800,315],[801,850,335],[851,900,355],[901,950,375],
+  [951,1000,390],[1001,1150,410],[1151,1300,440],[1301,1450,465],
+  [1451,1600,490],[1601,1750,515],[1751,2000,540],[2001,2250,570],
+  [2251,2500,595],[2501,2750,620],[2751,3000,645],[3001,3250,705],
+  [3251,3500,750],[3501,3750,800],[3751,4000,845],[4001,4500,900],
+  [4501,5000,945],[5001,5500,995],[5501,6000,1040],[6001,6500,1095],
+  [6501,7000,1140],[7001,7500,1190],[7501,8000,1235],[8001,8500,1290],
+  [8501,9000,1335],[9001,9500,1385],[9501,10000,1430],[10001,11000,1485],
+  [11001,12000,1530],[12001,13000,1580],[13001,14000,1625],[14001,15000,1680],
+  [15001,16000,1725],[16001,17000,1775],[17001,18000,1820],[18001,19000,1875],
+  [19001,20000,1920],[20001,22000,1970],[22001,24000,2015],[24001,26000,2070],
+  [26001,28000,2115],[28001,30000,2165],[30001,32000,2210],[32001,34000,2265],
+  [34001,36000,2310],[36001,38000,2360],[38001,40000,2405],[40001,42000,2460],
+  [42001,44000,2505],[44001,46000,2555],[46001,48000,2600],[48001,50000,2680],
+  [50001,52500,2745],[52501,55000,2810],[55001,57500,2875],[57501,60000,2940],
+  [60001,62500,3005],[62501,65000,3070],[65001,67500,3135],[67501,70000,3200],
+  [70001,72500,3265],[72501,75000,3330],[75001,77500,3395],[77501,80000,3460],
+  [80001,82500,3525],[82501,85000,3590],[85001,87500,3655],[87501,90000,3720],
+  [90001,92500,3785],[92501,95000,3850],[95001,97500,3915],[97501,100000,3980],
+  [100001,105000,4045],[105001,110000,4110],[110001,115000,4175],[115001,120000,4240],
+  [120001,125000,4305],[125001,130000,4370],[130001,135000,4435],[135001,140000,4500],
+  [140001,145000,4565],[145001,150000,4630],[150001,155000,4695],[155001,160000,4760],
+  [160001,165000,4825],[165001,170000,4890],[170001,175000,4955],[175001,180000,5020],
+  [180001,185000,5085],[185001,190000,5150],[190001,195000,5215],[195001,200000,5280],
+  [200001,210000,5345],[210001,220000,5410],[220001,230000,5475],[230001,240000,5540],
+  [240001,250000,5605],[250001,260000,5670],[260001,270000,5735],[270001,280000,5800],
+  [280001,290000,5865],[290001,300000,5930],[300001,310000,5995],[310001,320000,6060],
+  [320001,330000,6125],[330001,340000,6190],[340001,350000,6255],[350001,360000,6320],
+  [360001,370000,6385],[370001,380000,6450],[380001,390000,6515],[390001,400000,6580],
+  [400001,410000,6645],[410001,420000,6710],[420001,430000,6775],[430001,440000,6840],
+  [440001,450000,6905],[450001,460000,6970],[460001,470000,7035],[470001,480000,7100],
+  [480001,490000,7165],[490001,500000,7230],[500001,520000,7295],[520001,540000,7360],
+  [540001,560000,7425],[560001,580000,7490],[580001,600000,7555],[600001,620000,7620],
+  [620001,640000,7685],[640001,660000,7750],[660001,680000,7815],[680001,700000,7880],
+  [700001,720000,7945],[720001,740000,8010],[740001,760000,8075],[760001,780000,8140],
+  [780001,800000,8205],[800001,820000,8270],[820001,840000,8335],[840001,860000,8400],
+  [860001,880000,8465],[880001,900000,8530],[900001,920000,8595],[920001,940000,8660],
+  [940001,960000,8725],[960001,980000,8790],[980001,1000000,8855],
+  [1000001,1020000,8920],[1020001,1040000,8985],[1040001,1060000,9050],
+  [1060001,1080000,9115],[1080001,1100000,9180],[1100001,1120000,9245],
+  [1120001,1140000,9310],[1140001,1160000,9375],[1160001,1180000,9440],
+  [1180001,1200000,9505],
+];
+
+// Snap points = upper bound of each license tier
+const LIC_SNAPS = LICENSE_TIERS.map(t => t[1]);
+
+// SMS snaps: representative values within each tier
+const SMS_SNAPS = [
+  0,
+  1000, 2000, 3000, 4000, 5000,
+  6000, 7000, 8000, 9000, 10000,
+  15000, 20000, 30000, 40000, 50000,
+  60000, 70000, 80000, 90000, 100000,
+];
+
+// WhatsApp snaps
+const WA_SNAPS = [
+  0,
+  1000, 2000, 3000, 5000, 7500, 10000,
+];
+
+const INDUSTRY_MULTIPLIERS = {
+  'Zwierzęta i akcesoria dla zwierząt': 2077,
+  'Sztuka i rozrywka': 1931,
+  'Artykuły dla dorosłych': 1806,
+  'Biznes i przemysł': 6831,
+  'Ubrania i akcesoria': 2668,
+  'Elektronika': 10079,
+  'Sprzęt': 3972,
+  'Wydarzenia': 322,
+  'Jedzenie, napoje i tytoń': 3071,
+  'Meble': 16078,
+  'Gadżety i reklama': 1753,
+  'Gry i zabawki': 1493,
+  'Zdrowie i uroda': 1443,
+  'Zdrowie i dobrostan': 2782,
+  'Dom i ogród': 3219,
+  'Biżuteria': 6046,
+  'Dzieci i niemowlęta': 7127,
+  'Głoska bezdźwięczna': 2505,
+  'Materiały biurowe': 3554,
+  'Inny': 8534,
+  'Artykuły religijne i dewocyjne': 1501,
+  'Sprzęt sportowy': 4894,
+  'Akcesoria podróżne': 1448,
+  'Pojazdy i części': 1993,
+};
+
+const SMS_TIERS = [
+  [1,1000,0.15],[1001,5000,0.14],[5001,10000,0.12],
+  [10001,50000,0.11],[50001,100000,0.10],[100001,200000,0.09],[200001,Infinity,0.08],
+];
+const WA_TIERS = [
+  [1,1000,0.51],[1001,10000,0.50],[10001,Infinity,0.49],
+];
+
+// edrone Reviews snaps
+const REC_SNAPS = [
+  0, 50, 100, 250, 500, 1000, 1500, 2000, 3000, 3500, 5000, 7500, 10000, 15000, 20000
+];
+
+// Cascading price: each tier applies only to orders within that bracket
+function calcRecPrice(n) {
+  if (n <= 0) return 0;
+  if (n <= 50) return 49;
+  const brackets = [
+    [51,   100,  0.99],
+    [101,  250,  0.76],
+    [251,  500,  0.60],
+    [501,  1000, 0.45],
+    [1001, 2000, 0.32],
+    [2001, 3500, 0.26],
+    [3501, 5000, 0.23],
+    [5001, 10000,0.14],
+    [10001,Infinity,0.14],
+  ];
+  let total = 49; // base for first 50
+  for (const [lo, hi, rate] of brackets) {
+    if (n < lo) break;
+    const count = Math.min(n, hi === Infinity ? n : hi) - lo + 1;
+    total += count * rate;
+  }
+  return Math.round(total * 100) / 100;
+}
+
+// edrone AI chat snaps (traffic)
+const AI_SNAPS = [
+  0, 1000, 2000, 5000, 10000, 15000, 20000, 30000,
+  50000, 75000, 100000, 125000, 150000, 175000, 200000
+];
+
+function calcAiPrice(n) {
+  if (n <= 0) return 0;
+  return 49 + Math.floor(n / 1000) * 8;
+}
+
+// Ramki rekomendacji AI snaps (views)
+const RF_SNAPS = [
+  0, 1000, 2000, 5000, 10000, 15000, 20000, 30000,
+  50000, 75000, 100000, 125000, 150000, 175000, 200000
+];
+
+function calcRfPrice(n) {
+  if (n <= 0) return 0;
+  return 49 + Math.floor(n / 1000) * 6;
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+
+function getRate(n, tiers) {
+  return tiers.find(([min,max]) => n >= min && n <= max)?.[2] ?? tiers[tiers.length-1][2];
+}
+
+function fmt(n) {
+  return n.toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' zł';
+}
+function fmtInt(n) { return n.toLocaleString('pl-PL'); }
+
+function setFill(slider, fillEl) {
+  const pct = (slider.value / slider.max) * 100;
+  fillEl.style.width = pct + '%';
+}
+
+// ── Init sliders ──────────────────────────────────────────────────────────
+
+function initSlider(id, snaps) {
+  const el = document.getElementById(id);
+  el.max = snaps.length - 1;
+  el.value = 0;
+}
+
+initSlider('licSlider', LIC_SNAPS);
+initSlider('smsSlider', SMS_SNAPS);
+initSlider('waSlider', WA_SNAPS);
+initSlider('recSlider', REC_SNAPS);
+initSlider('aiSlider', AI_SNAPS);
+initSlider('rfSlider', RF_SNAPS);
+
+// ── State ─────────────────────────────────────────────────────────────────
+
+let state = { lic: 0, sms: 0, wa: 0, rec: 0, ai: 0, rf: 0, smsOn: true, waOn: true, recOn: true, aiOn: true, rfOn: true };
+
+// ── Recalculate ───────────────────────────────────────────────────────────
+
+function recalc() {
+  // Licencja
+  const licIdx = parseInt(document.getElementById('licSlider').value);
+  const licMax = LIC_SNAPS[licIdx];
+  const licMin = licIdx === 0 ? 0 : LICENSE_TIERS[licIdx][0];
+  const licPrice = LICENSE_TIERS[licIdx][2];
+  state.lic = licPrice;
+
+  const licLabel = licIdx === 0 ? `do ${fmtInt(licMax)}` : `${fmtInt(licMin)} – ${fmtInt(licMax)}`;
+  document.getElementById('licRangeLabel').textContent = licLabel;
+  document.getElementById('licPriceDisplay').textContent = fmt(licPrice);
+  setFill(document.getElementById('licSlider'), document.getElementById('licFill'));
+
+  // SMS
+  const smsOn = document.getElementById('smsToggle').checked;
+  state.smsOn = smsOn;
+  const smsIdx = parseInt(document.getElementById('smsSlider').value);
+  const smsCount = SMS_SNAPS[smsIdx];
+  const smsRate = smsCount > 0 ? getRate(smsCount, SMS_TIERS) : 0;
+  const smsTotal = Math.round(smsCount * smsRate * 100) / 100;
+  state.sms = smsOn ? smsTotal : 0;
+
+  document.getElementById('smsRangeLabel').textContent = fmtInt(smsCount);
+  document.getElementById('smsPriceDisplay').textContent = fmt(smsTotal);
+  document.getElementById('smsBody').className = 'mcard-body' + (smsOn ? '' : ' disabled');
+  setFill(document.getElementById('smsSlider'), document.getElementById('smsFill'));
+
+  // WhatsApp
+  const waOn = document.getElementById('waToggle').checked;
+  state.waOn = waOn;
+  const waIdx = parseInt(document.getElementById('waSlider').value);
+  const waCount = WA_SNAPS[waIdx];
+  const waRate = waCount > 0 ? getRate(waCount, WA_TIERS) : 0;
+  const waTotal = Math.round(waCount * waRate * 100) / 100;
+  state.wa = waOn ? waTotal : 0;
+
+  document.getElementById('waRangeLabel').textContent = fmtInt(waCount);
+  document.getElementById('waPriceDisplay').textContent = fmt(waTotal);
+  document.getElementById('waBody').className = 'mcard-body' + (waOn ? '' : ' disabled');
+  setFill(document.getElementById('waSlider'), document.getElementById('waFill'));
+
+  // Stats
+  const industry = document.getElementById('industrySelect').value;
+  const multiplier = INDUSTRY_MULTIPLIERS[industry];
+  const statsSection = document.getElementById('statsSection');
+
+  if (industry && multiplier) {
+    const revenue = Math.round((licMax / 1000) * multiplier);
+    const roi = Math.round((revenue / (state.lic + state.sms + state.wa + state.rec + state.ai + state.rf)) * 100);
+
+    document.getElementById('statRevenue').textContent = fmt(revenue);
+    document.getElementById('statRoi').textContent = roi.toLocaleString('pl-PL') + '%';
+    document.getElementById('statsPretitle').textContent =
+      `Branża: ${industry} · Baza: ${licLabel} kontaktów`;
+    statsSection.classList.add('visible');
+  } else {
+    statsSection.classList.remove('visible');
+  }
+
+  // Summary
+  const total = state.lic + state.sms + state.wa + state.rec + state.ai + state.rf;
+
+  document.getElementById('summaryTotal').textContent = fmt(total);
+  document.getElementById('summaryTotalBig').textContent = fmt(total);
+
+  document.getElementById('sumLic').textContent = fmt(state.lic);
+  document.getElementById('sumLicSub').textContent = licLabel + ' kontaktów';
+
+  if (smsOn) {
+    document.getElementById('sumSms').textContent = fmt(state.sms);
+    document.getElementById('sumSms').className = 'srow-value';
+    document.getElementById('sumSmsSub').textContent = `${fmtInt(smsCount)} SMS × ${smsRate.toFixed(2)} zł`;
+  } else {
+    document.getElementById('sumSms').textContent = 'wyłączony';
+    document.getElementById('sumSms').className = 'srow-value off';
+    document.getElementById('sumSmsSub').textContent = '';
+  }
+
+  if (waOn) {
+    document.getElementById('sumWa').textContent = fmt(state.wa);
+    document.getElementById('sumWa').className = 'srow-value';
+    document.getElementById('sumWaSub').textContent = `${fmtInt(waCount)} msg × ${waRate.toFixed(2)} zł`;
+  } else {
+    document.getElementById('sumWa').textContent = 'wyłączony';
+    document.getElementById('sumWa').className = 'srow-value off';
+    document.getElementById('sumWaSub').textContent = '';
+  }
+
+  // edrone Reviews
+  const recOn = document.getElementById('recToggle').checked;
+  state.recOn = recOn;
+  const recIdx = parseInt(document.getElementById('recSlider').value);
+  const recCount = REC_SNAPS[recIdx];
+  const recTotal = calcRecPrice(recCount);
+  state.rec = recOn ? recTotal : 0;
+
+  document.getElementById('recRangeLabel').textContent = fmtInt(recCount);
+  document.getElementById('recPriceDisplay').textContent = fmt(recTotal);
+  document.getElementById('recBody').className = 'mcard-body' + (recOn ? '' : ' disabled');
+  setFill(document.getElementById('recSlider'), document.getElementById('recFill'));
+
+  if (recOn) {
+    document.getElementById('sumRec').textContent = recCount === 0 ? fmt(0) : fmt(state.rec);
+    document.getElementById('sumRec').className = 'srow-value';
+    document.getElementById('sumRecSub').textContent = recCount > 0 ? `${fmtInt(recCount)} zamówień (kaskadowo)` : '';
+  } else {
+    document.getElementById('sumRec').textContent = 'wyłączony';
+    document.getElementById('sumRec').className = 'srow-value off';
+    document.getElementById('sumRecSub').textContent = '';
+  }
+
+  // edrone AI chat
+  const aiOn = document.getElementById('aiToggle').checked;
+  state.aiOn = aiOn;
+  const aiIdx = parseInt(document.getElementById('aiSlider').value);
+  const aiCount = AI_SNAPS[aiIdx];
+  const aiTotal = calcAiPrice(aiCount);
+  state.ai = aiOn ? aiTotal : 0;
+
+  document.getElementById('aiRangeLabel').textContent = fmtInt(aiCount);
+  document.getElementById('aiPriceDisplay').textContent = fmt(aiTotal);
+  document.getElementById('aiBody').className = 'mcard-body' + (aiOn ? '' : ' disabled');
+  setFill(document.getElementById('aiSlider'), document.getElementById('aiFill'));
+
+  if (aiOn) {
+    document.getElementById('sumAi').textContent = aiCount === 0 ? fmt(0) : fmt(state.ai);
+    document.getElementById('sumAi').className = 'srow-value';
+    document.getElementById('sumAiSub').textContent = aiCount > 0 ? `49 zł + ${fmtInt(Math.floor(aiCount/1000))} × 8 zł` : '';
+  } else {
+    document.getElementById('sumAi').textContent = 'wyłączony';
+    document.getElementById('sumAi').className = 'srow-value off';
+    document.getElementById('sumAiSub').textContent = '';
+  }
+
+  // Ramki rekomendacji AI
+  const rfOn = document.getElementById('rfToggle').checked;
+  state.rfOn = rfOn;
+  const rfIdx = parseInt(document.getElementById('rfSlider').value);
+  const rfCount = RF_SNAPS[rfIdx];
+  const rfTotal = calcRfPrice(rfCount);
+  state.rf = rfOn ? rfTotal : 0;
+
+  document.getElementById('rfRangeLabel').textContent = fmtInt(rfCount);
+  document.getElementById('rfPriceDisplay').textContent = fmt(rfTotal);
+  document.getElementById('rfBody').className = 'mcard-body' + (rfOn ? '' : ' disabled');
+  setFill(document.getElementById('rfSlider'), document.getElementById('rfFill'));
+
+  if (rfOn) {
+    document.getElementById('sumRf').textContent = rfCount === 0 ? fmt(0) : fmt(state.rf);
+    document.getElementById('sumRf').className = 'srow-value';
+    document.getElementById('sumRfSub').textContent = rfCount > 0 ? `49 zł + ${fmtInt(Math.floor(rfCount/1000))} × 6 zł` : '';
+  } else {
+    document.getElementById('sumRf').textContent = 'wyłączony';
+    document.getElementById('sumRf').className = 'srow-value off';
+    document.getElementById('sumRfSub').textContent = '';
+  }
+}
+
+// ── Events ────────────────────────────────────────────────────────────────
+
+['licSlider','smsSlider','waSlider','recSlider','aiSlider','rfSlider'].forEach(id =>
+  document.getElementById(id).addEventListener('input', recalc)
+);
+['smsToggle','waToggle','recToggle','aiToggle','rfToggle'].forEach(id =>
+  document.getElementById(id).addEventListener('change', recalc)
+);
+document.getElementById('industrySelect').addEventListener('change', recalc);
+
+recalc();
+
+// ── Copy ──────────────────────────────────────────────────────────────────
+
+function copyQuote() {
+  const licIdx = parseInt(document.getElementById('licSlider').value);
+  const licMax = LIC_SNAPS[licIdx];
+  const licMin = licIdx === 0 ? 0 : LICENSE_TIERS[licIdx][0];
+  const smsCount = SMS_SNAPS[parseInt(document.getElementById('smsSlider').value)];
+  const waCount  = WA_SNAPS[parseInt(document.getElementById('waSlider').value)];
+  const recCount = REC_SNAPS[parseInt(document.getElementById('recSlider').value)];
+  const aiCount  = AI_SNAPS[parseInt(document.getElementById('aiSlider').value)];
+  const smsRate  = getRate(smsCount, SMS_TIERS);
+  const waRate   = getRate(waCount, WA_TIERS);
+
+  const total = state.lic + state.sms + state.wa + state.rec + state.ai + state.rf;
+  const licLabel = licIdx === 0 ? `do ${fmtInt(licMax)}` : `${fmtInt(licMin)}–${fmtInt(licMax)}`;
+
+  const industry = document.getElementById('industrySelect').value;
+
+  const lines = [
+    'WYCENA EDRONE — miesięczna, netto PLN',
+    ...(industry ? [`Branża: ${industry}`] : []),
+    '─'.repeat(40),
+    `Licencja (${licLabel} kontaktów):`,
+    `  ${fmt(state.lic)}`,
+  ];
+  if (state.smsOn && smsCount > 0)
+    lines.push(`SMS (${fmtInt(smsCount)} × ${smsRate.toFixed(2)} zł):\n  ${fmt(state.sms)}`);
+  if (state.waOn && waCount > 0)
+    lines.push(`WhatsApp (${fmtInt(waCount)} × ${waRate.toFixed(2)} zł):\n  ${fmt(state.wa)}`);
+  if (state.recOn && recCount > 0)
+    lines.push(`edrone Reviews (${fmtInt(recCount)} zamówień, kaskadowo):\n  ${fmt(state.rec)}`);
+  if (state.aiOn && aiCount > 0)
+    lines.push(`edrone AI chat (${fmtInt(aiCount)} wizyt):\n  ${fmt(state.ai)}`);
+  const rfCount2 = RF_SNAPS[parseInt(document.getElementById('rfSlider').value)];
+  if (state.rfOn && rfCount2 > 0)
+    lines.push(`Ramki rekomendacji AI (${fmtInt(rfCount2)} wyświetleń):\n  ${fmt(state.rf)}`);
+  lines.push('─'.repeat(40));
+  lines.push(`RAZEM: ${fmt(total)}`);
+  lines.push('\nCeny netto, bez VAT.');
+
+  navigator.clipboard.writeText(lines.join('\n')).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✓ Skopiowano!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Skopiuj wycenę'; btn.classList.remove('copied'); }, 2500);
+  });
+}
+</script>
+</body>
+</html>
