@@ -1226,7 +1226,7 @@ function recalc() {
   if (industry && multiplier) {
     const revenue = Math.round((licMax / 1000) * multiplier);
     const roi = total > 0 ? Math.round((revenue / total) * 100) : 0;
-    document.getElementById('statRevenue').textContent = fmt(revenue);
+    document.getElementById('statRevenue').textContent = fmtInt(revenue) + ' zł';
     document.getElementById('statRoi').textContent = roi.toLocaleString('pl-PL') + '%';
 
     // Time to ROI
