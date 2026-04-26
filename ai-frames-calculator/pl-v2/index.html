@@ -1,0 +1,1789 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Kalkulator Ramek Rekomendacji AI — edrone</title>
+<style>
+  :root {
+    --bg: #F5F0E1;
+    --bg-dark: #1E1E1E;
+    --text: #1E1E1E;
+    --text-inv: #FAF5E6;
+    --muted: #6B6559;
+    --muted-dark: #B0B0B0;
+    --card: #FAF5E6;
+    --card-2: #F0EAD9;
+    --border: #E0DAC9;
+    --accent: #ECFF5A;
+    --accent-2: #5AE3E3;
+    --danger: #B00020;
+    --success: #1B7A3E;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .topbar {
+    padding: 18px 32px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--bg);
+  }
+  .topbar .brand {
+    font-weight: 800;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+  }
+  .topbar .brand .dot {
+    display: inline-block;
+    width: 10px; height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+    border: 1.5px solid var(--text);
+  }
+  .topbar .brand span { color: var(--muted); font-weight: 500; margin-left: 8px; }
+
+  /* HERO */
+  .hero {
+    background: var(--bg-dark);
+    padding: 80px 32px 96px;
+    text-align: center;
+  }
+  .hero-inner { max-width: 820px; margin: 0 auto; }
+  .hero .pill {
+    display: inline-block;
+    padding: 8px 20px;
+    border: 1.5px solid var(--accent-2);
+    border-radius: 999px;
+    color: var(--accent-2);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .hero h1 {
+    color: var(--accent);
+    font-size: 56px;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin: 0 0 20px;
+  }
+  .hero p.lead {
+    color: var(--muted-dark);
+    font-size: 17px;
+    line-height: 1.65;
+    margin: 0 auto 28px;
+    max-width: 680px;
+  }
+  .hero .badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 28px;
+    color: #fff;
+    font-size: 14px;
+    margin-top: 20px;
+  }
+  .hero .badges span { color: var(--accent-2); font-weight: 700; }
+  @media (max-width: 640px) {
+    .hero { padding: 56px 22px 72px; }
+    .hero h1 { font-size: 36px; }
+  }
+
+  main {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0 28px 80px;
+  }
+
+  /* CALCULATOR CARD */
+  .calc-wrap {
+    margin-top: -56px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: 0 24px 60px -28px rgba(30,30,30,0.25);
+    padding: 36px;
+    position: relative;
+    z-index: 2;
+  }
+  .calc-wrap h2 {
+    margin: 0 0 6px;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+  .calc-wrap .calc-sub {
+    margin: 0 0 26px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  @media (max-width: 640px) {
+    .calc-wrap { padding: 24px; margin-top: -40px; border-radius: 14px; }
+  }
+
+  /* INPUT FIELDS */
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .field { margin-bottom: 22px; }
+  .field-shop {
+    background: linear-gradient(180deg, #FFFEF3 0%, var(--card) 100%);
+    border: 2px solid var(--text);
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin-bottom: 26px;
+  }
+  .field-shop label {
+    color: var(--text);
+    font-size: 13px;
+  }
+  .field-shop label::before {
+    content: "▸ ";
+    color: var(--text);
+  }
+  input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 17px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--text);
+    font-family: inherit;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .field-shop input[type="text"] {
+    font-size: 22px;
+    font-weight: 700;
+    border: none;
+    background: transparent;
+    padding: 6px 0;
+    letter-spacing: -0.01em;
+  }
+  .field-shop input[type="text"]:focus { outline: none; }
+  input:focus {
+    outline: none;
+    border-color: var(--text);
+    box-shadow: 0 0 0 4px rgba(236, 255, 90, 0.4);
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--border);
+    outline: none;
+    padding: 0;
+    margin: 6px 0 0;
+    cursor: pointer;
+  }
+  input[type="range"]:focus { outline: none; box-shadow: none; }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    border: 2.5px solid var(--text);
+    box-shadow: 0 0 0 4px rgba(236, 255, 90, 0.25);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    border: 2.5px solid var(--text);
+    box-shadow: 0 0 0 4px rgba(236, 255, 90, 0.25);
+  }
+  .slider-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 4px;
+  }
+  .slider-head .caption {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .slider-value {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.015em;
+  }
+  .slider-bounds {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+  @media (max-width: 640px) {
+    .grid-2 { grid-template-columns: 1fr; gap: 18px; }
+  }
+
+  /* ADVANCED PARAMS */
+  .params {
+    margin-top: 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .params summary {
+    padding: 16px 22px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text);
+  }
+  .params summary::-webkit-details-marker { display: none; }
+  .params summary::after {
+    content: "▼";
+    font-size: 11px;
+    color: var(--muted);
+    transition: transform 0.2s;
+  }
+  .params[open] summary::after { transform: rotate(180deg); }
+  .params summary .badge-default {
+    margin-left: 10px;
+    font-size: 10px;
+    background: var(--accent);
+    color: var(--text);
+    padding: 3px 8px;
+    border-radius: 999px;
+    letter-spacing: 0.06em;
+    font-weight: 800;
+  }
+  .params .params-body {
+    padding: 8px 22px 22px;
+    border-top: 1px solid var(--border);
+    background: #fff;
+  }
+  .params-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px 28px;
+    margin-top: 18px;
+  }
+  @media (max-width: 640px) { .params-grid { grid-template-columns: 1fr; gap: 18px; } }
+  .param-block label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+  }
+  .param-block .param-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .param-block .param-val {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text);
+    text-transform: none;
+    letter-spacing: -0.01em;
+  }
+  .param-block .hint {
+    font-size: 12px;
+    color: var(--muted);
+    margin: 6px 0 0;
+    line-height: 1.45;
+  }
+  .fixed-pricing {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+    padding: 14px 16px;
+    background: var(--card-2);
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+  }
+  .fixed-pricing-item {
+    flex: 1 1 180px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 4px 8px;
+  }
+  .fixed-pricing-item + .fixed-pricing-item {
+    border-left: 1px solid var(--border);
+    padding-left: 18px;
+  }
+  @media (max-width: 540px) {
+    .fixed-pricing-item + .fixed-pricing-item { border-left: none; padding-left: 8px; }
+  }
+  .fixed-pricing-item .fp-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .fixed-pricing-item .fp-value {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text);
+  }
+  .params-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+  }
+  .btn-ghost {
+    background: #fff;
+    color: var(--text);
+    border: 1.5px solid var(--text);
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-ghost:hover { background: var(--card-2); }
+
+  button.cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: var(--text);
+    border: 2px solid var(--text);
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 800;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: 0.01em;
+    box-shadow: 4px 4px 0 var(--text);
+    transition: transform 0.08s, box-shadow 0.08s;
+    margin-top: 18px;
+  }
+  button.cta:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--text);
+  }
+  button.cta:active {
+    transform: translate(0, 0);
+    box-shadow: 2px 2px 0 var(--text);
+  }
+  button.cta:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 4px 4px 0 var(--text);
+  }
+  .error {
+    color: var(--danger);
+    font-size: 14px;
+    margin-top: 14px;
+    font-weight: 600;
+  }
+  .hidden { display: none !important; }
+
+  /* RESULTS */
+  .results-block {
+    margin-top: 36px;
+    padding: 32px 32px 8px;
+    background: var(--bg-dark);
+    color: var(--text-inv);
+    border-radius: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .results-block::before {
+    content: "";
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: var(--accent);
+    border-radius: 50%;
+    opacity: 0.15;
+  }
+  .results-for {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--accent-2);
+    font-weight: 700;
+    margin: 0 0 6px;
+  }
+  .results-shop {
+    font-size: 36px;
+    font-weight: 800;
+    margin: 0 0 4px;
+    letter-spacing: -0.02em;
+    color: var(--accent);
+    word-break: break-word;
+  }
+  .results-meta {
+    font-size: 14px;
+    color: var(--muted-dark);
+    margin: 0 0 28px;
+  }
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  @media (max-width: 760px) {
+    .kpis { grid-template-columns: 1fr; }
+    .results-block { padding: 24px 22px 8px; }
+    .results-shop { font-size: 28px; }
+  }
+  .kpi {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    padding: 22px;
+  }
+  .kpi.highlight {
+    background: var(--accent);
+    color: var(--text);
+    border-color: var(--accent);
+  }
+  .kpi .kpi-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted-dark);
+    font-weight: 700;
+    margin: 0 0 8px;
+  }
+  .kpi.highlight .kpi-label { color: rgba(30,30,30,0.7); }
+  .kpi .kpi-value {
+    font-size: 38px;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .kpi .kpi-sub {
+    font-size: 13px;
+    color: var(--muted-dark);
+    margin: 8px 0 0;
+  }
+  .kpi.highlight .kpi-sub { color: rgba(30,30,30,0.75); }
+
+  .breakdown {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin: 10px 0 18px;
+  }
+  .breakdown h4 {
+    margin: 0 0 12px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted-dark);
+    font-weight: 700;
+  }
+  .breakdown .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-size: 14px;
+  }
+  .breakdown .row:first-of-type { border-top: none; }
+  .breakdown .row .lbl { color: var(--muted-dark); }
+  .breakdown .row .val { font-weight: 700; color: var(--text-inv); }
+  .breakdown .row.total .val { color: var(--accent); font-size: 16px; }
+  .breakdown .row.commission {
+    margin: 12px -22px;
+    padding: 16px 22px;
+    background: rgba(236, 255, 90, 0.12);
+    border-top: 1px solid rgba(236, 255, 90, 0.3);
+    border-bottom: 1px solid rgba(236, 255, 90, 0.3);
+    font-size: 17px;
+    align-items: center;
+  }
+  .breakdown .row.commission .lbl {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.01em;
+  }
+  .breakdown .row.commission .lbl small {
+    display: block;
+    font-size: 11px;
+    color: var(--muted-dark);
+    font-weight: 500;
+    margin-top: 2px;
+    letter-spacing: 0;
+  }
+  .breakdown .row.commission .val {
+    color: var(--accent);
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  .results-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 24px;
+    align-items: center;
+    padding: 18px 0;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    font-size: 14px;
+    color: var(--muted-dark);
+  }
+  .results-summary strong { color: var(--accent); font-weight: 800; }
+
+  .results-cta {
+    margin: 18px -32px -8px;
+    padding: 22px 32px;
+    background: var(--accent);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  @media (max-width: 760px) {
+    .results-cta { margin: 18px -22px -8px; padding: 20px 22px; }
+  }
+  .results-cta .copy { font-weight: 700; font-size: 15px; max-width: 460px; }
+  .results-cta .small {
+    display: block;
+    font-weight: 500;
+    font-size: 13px;
+    color: rgba(30,30,30,0.7);
+    margin-top: 2px;
+  }
+  .results-cta button {
+    background: var(--text);
+    color: var(--accent);
+    border: none;
+    padding: 12px 22px;
+    font-weight: 800;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .results-cta button:hover { filter: brightness(1.1); }
+
+  /* SECTIONS */
+  .section { margin-top: 80px; }
+  .section-header { margin-bottom: 36px; }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text);
+    background: var(--accent);
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+    border: 1.5px solid var(--text);
+  }
+  .eyebrow::before {
+    content: "";
+    width: 6px; height: 6px;
+    background: var(--text);
+    border-radius: 50%;
+  }
+  .section h2 {
+    font-size: 42px;
+    font-weight: 800;
+    margin: 0 0 14px;
+    letter-spacing: -0.028em;
+    line-height: 1.05;
+    max-width: 820px;
+  }
+  .section h2 em {
+    font-style: normal;
+    background: linear-gradient(180deg, transparent 58%, var(--accent) 58%, var(--accent) 92%, transparent 92%);
+    padding: 0 6px;
+    margin: 0 -3px;
+  }
+  .section h2 .stroke {
+    -webkit-text-stroke: 2px var(--text);
+    color: transparent;
+    font-style: normal;
+  }
+  @media (max-width: 640px) {
+    .section { margin-top: 56px; }
+    .section h2 { font-size: 30px; }
+  }
+  .section .section-lead {
+    color: var(--muted);
+    font-size: 17px;
+    margin: 0;
+    max-width: 720px;
+    line-height: 1.6;
+  }
+  .section-header.center { text-align: center; }
+  .section-header.center .section-lead { margin-left: auto; margin-right: auto; }
+
+  /* SCREENS / MOCKUPS */
+  .screens-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 860px) { .screens-grid { grid-template-columns: 1fr; } }
+  .screen-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 16px 40px -20px rgba(30,30,30,0.18);
+    display: flex;
+    flex-direction: column;
+  }
+  .screen-card .browser-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    background: var(--card-2);
+    border-bottom: 1px solid var(--border);
+  }
+  .screen-card .browser-bar .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+  .screen-card .browser-bar .dot:nth-child(1) { background: #FF6058; }
+  .screen-card .browser-bar .dot:nth-child(2) { background: #FFBD2E; }
+  .screen-card .browser-bar .dot:nth-child(3) { background: #28C941; }
+  .screen-card .browser-bar .url {
+    margin-left: 14px;
+    font-size: 11px;
+    color: var(--muted);
+    font-family: -apple-system, monospace;
+    background: #fff;
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    flex: 1;
+  }
+  .screen-card .screen-body { padding: 24px; flex: 1; }
+  .screen-card .screen-body.has-image { padding: 0; background: #fff; display: flex; align-items: center; justify-content: center; min-height: 280px; }
+  .screen-card .screen-body.has-image img { display: block; max-width: 100%; max-height: 360px; height: auto; width: auto; }
+  .screen-card .screen-caption {
+    padding: 14px 22px 18px;
+    border-top: 1px solid var(--border);
+    background: var(--card);
+  }
+  .screen-card .screen-caption h4 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 800;
+  }
+  .screen-card .screen-caption p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* Mockup: Polecane dla Ciebie */
+  .mockup-recos {
+    background: #fff;
+  }
+  .mockup-recos h5 {
+    margin: 0 0 20px;
+    font-size: 18px;
+    font-weight: 800;
+    text-align: center;
+    color: #1E1E1E;
+  }
+  .mockup-recos .reco-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    position: relative;
+  }
+  .mockup-recos .product {
+    background: #fff;
+    border-radius: 4px;
+    position: relative;
+  }
+  .mockup-recos .product .img {
+    aspect-ratio: 1 / 1;
+    background: linear-gradient(180deg, #F0E5D5 0%, #E5DACA 100%);
+    border-radius: 4px;
+    position: relative;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .mockup-recos .product .img.socks {
+    background: linear-gradient(180deg, #EDE0CB 0%, #D9C5A8 100%);
+  }
+  .mockup-recos .product .img.tee {
+    background: linear-gradient(180deg, #E8DACB 0%, #C8B7A3 100%);
+  }
+  .mockup-recos .product .img svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .mockup-recos .product .name {
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0 0 8px;
+    color: #1E1E1E;
+    line-height: 1.35;
+    min-height: 38px;
+  }
+  .mockup-recos .product .price {
+    font-size: 15px;
+    font-weight: 700;
+    color: #C42B2B;
+    margin: 0 0 14px;
+  }
+  .mockup-recos .product .price s {
+    color: #999;
+    font-weight: 400;
+    margin-right: 8px;
+    font-size: 13px;
+  }
+  .mockup-recos .product .btn {
+    display: block;
+    text-align: center;
+    background: #C42B2B;
+    color: #fff;
+    padding: 10px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .mockup-recos .arrow-right-overlay {
+    position: absolute;
+    top: 38%;
+    right: -14px;
+    width: 32px; height: 32px;
+    border-radius: 4px;
+    background: #C42B2B;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    z-index: 2;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+
+  /* Mockup: Dobierz produkty */
+  .mockup-picker {
+    background: #fff;
+  }
+  .mockup-picker h5 {
+    margin: 0 0 18px;
+    font-size: 17px;
+    font-weight: 800;
+    color: #1E1E1E;
+  }
+  .mockup-picker .picker-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .mockup-picker .pick {
+    background: #fff;
+    border: 1.5px solid #E8E8EE;
+    border-radius: 8px;
+    padding: 18px 14px;
+    text-align: center;
+    transition: border-color 0.15s;
+  }
+  .mockup-picker .pick.active {
+    border-color: #4F46E5;
+    border-width: 2px;
+    background: #F4F5FF;
+    padding: 17px 13px;
+  }
+  .mockup-picker .pick .ico {
+    width: 26px; height: 26px;
+    margin: 0 auto 10px;
+    display: block;
+  }
+  .mockup-picker .pick .ttl {
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0 0 4px;
+    color: #1E1E1E;
+  }
+  .mockup-picker .pick .sub {
+    font-size: 11px;
+    color: #6B6B7A;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  /* Mockup: Setup steps */
+  .mockup-setup {
+    grid-column: 1 / -1;
+  }
+  .mockup-setup .setup-title {
+    text-align: center;
+    margin: 0 0 22px;
+    font-size: 18px;
+    font-weight: 800;
+  }
+  .mockup-setup .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 760px) { .mockup-setup .steps { grid-template-columns: 1fr; } }
+  .mockup-setup .step {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+  }
+  .mockup-setup .step .num {
+    display: inline-block;
+    background: #4F46E5;
+    color: #fff;
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    text-align: center;
+    line-height: 26px;
+    font-weight: 800;
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+  .mockup-setup .step .preview {
+    height: 90px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mockup-setup .step .preview .lines {
+    width: 70%;
+  }
+  .mockup-setup .step .preview .lines div {
+    height: 6px;
+    background: #E8E8EE;
+    border-radius: 3px;
+    margin-bottom: 4px;
+  }
+  .mockup-setup .step .preview .lines div:first-child { width: 90%; }
+  .mockup-setup .step .preview .lines div:nth-child(2) { width: 70%; }
+  .mockup-setup .step .preview .lines div:nth-child(3) { width: 50%; }
+  .mockup-setup .step .preview .pill-cta {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #4F46E5;
+    color: #fff;
+    font-size: 9px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    font-weight: 700;
+  }
+  .mockup-setup .step h6 {
+    margin: 0 0 4px;
+    font-size: 14px;
+    font-weight: 800;
+  }
+  .mockup-setup .step p {
+    margin: 0;
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* STATS GRID */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 760px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 460px) { .stats { grid-template-columns: 1fr; } }
+  .stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 20px;
+  }
+  .stat .num {
+    font-size: 38px;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--text);
+    letter-spacing: -0.025em;
+    margin: 0 0 8px;
+  }
+  .stat .num em {
+    font-style: normal;
+    background: var(--accent);
+    padding: 0 4px;
+  }
+  .stat .desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 0;
+    line-height: 1.45;
+  }
+  .stat .src {
+    font-size: 11px;
+    color: var(--muted);
+    margin: 8px 0 0;
+    font-style: italic;
+  }
+
+  /* PROBLEM/REASON LIST */
+  .reason-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 760px) { .reason-grid { grid-template-columns: 1fr; } }
+  .reason-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+  }
+  .reason-card h3 {
+    font-size: 17px;
+    font-weight: 800;
+    margin: 0 0 8px;
+    letter-spacing: -0.005em;
+  }
+  .reason-card h3::before {
+    content: "✕";
+    color: var(--danger);
+    font-weight: 800;
+    margin-right: 8px;
+  }
+  .reason-card.solution h3::before {
+    content: "✓";
+    color: var(--success);
+  }
+  .reason-card p {
+    color: var(--muted);
+    font-size: 14.5px;
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  /* ALGO SECTION */
+  .algos {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 760px) { .algos { grid-template-columns: 1fr; } }
+  .algo {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .algo .icon {
+    flex-shrink: 0;
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: var(--accent);
+    border: 2px solid var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 800;
+  }
+  .algo h3 { font-size: 16px; margin: 0 0 4px; font-weight: 800; }
+  .algo p { font-size: 14px; color: var(--muted); margin: 0; line-height: 1.5; }
+
+  /* PLACEMENTS */
+  .placements {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .placement {
+    background: var(--card);
+    border: 1.5px solid var(--text);
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .placement::before { content: "📍"; margin-right: 6px; }
+
+  /* PRICING TABLE */
+  .pricing-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin: 12px 0 0;
+  }
+  .pricing-table th, .pricing-table td {
+    padding: 16px 20px;
+    text-align: left;
+    font-size: 15px;
+    border-bottom: 1px solid var(--border);
+  }
+  .pricing-table th {
+    background: var(--card-2);
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .pricing-table tr:last-child td { border-bottom: none; }
+  .pricing-note {
+    color: var(--muted);
+    font-size: 13.5px;
+    margin: 14px 0 0;
+    line-height: 1.6;
+  }
+
+  /* FAQ */
+  .faq details {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 22px;
+    margin-bottom: 10px;
+    transition: background 0.15s;
+  }
+  .faq details[open] { background: var(--card-2); }
+  .faq summary {
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 15px;
+    list-style: none;
+    padding-right: 30px;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after {
+    content: "+";
+    float: right;
+    font-weight: 700;
+    color: var(--muted);
+    font-size: 22px;
+    line-height: 1;
+    margin-right: -22px;
+  }
+  .faq details[open] summary::after { content: "−"; }
+  .faq details p {
+    color: var(--muted);
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin: 12px 0 0;
+  }
+
+  /* BIG CTA */
+  .cta-section {
+    margin-top: 72px;
+    padding: 56px 36px;
+    background: var(--bg-dark);
+    color: var(--text-inv);
+    border-radius: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: "";
+    position: absolute;
+    bottom: -100px; left: -100px;
+    width: 300px; height: 300px;
+    background: var(--accent);
+    border-radius: 50%;
+    opacity: 0.1;
+  }
+  .cta-section h2 {
+    color: var(--accent);
+    font-size: 34px;
+    margin: 0 0 12px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    position: relative;
+  }
+  .cta-section p {
+    margin: 0 0 24px;
+    font-size: 16px;
+    color: var(--muted-dark);
+    position: relative;
+    max-width: 540px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .cta-section .timing {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+    font-size: 14px;
+    color: #fff;
+    position: relative;
+  }
+  .cta-section .timing strong { color: var(--accent); }
+  @media (max-width: 640px) {
+    .cta-section { padding: 40px 24px; }
+    .cta-section h2 { font-size: 26px; }
+  }
+
+  footer {
+    margin-top: 32px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="dot"></span>edrone <span>Kalkulator Ramek Rekomendacji AI</span></div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <span class="pill">edrone AI Recommendation Frames</span>
+      <h1>Więcej zamówień. Ten sam ruch.</h1>
+      <p class="lead">31–35% przychodu w e-commerce pochodzi z rekomendacji (Amazon, McKinsey). Sprawdź, ile dodatkowej sprzedaży wygeneruje <strong>Twój sklep</strong> dzięki Ramkom Rekomendacji AI.</p>
+      <div class="badges">
+        <div>✓ Wdrożenie w <span>15 minut</span></div>
+        <div>✓ Bez kodowania</div>
+        <div>✓ Płacisz tylko za <span>efekt</span></div>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <div class="calc-wrap">
+      <h2>Policz, ile dodatkowej sprzedaży wygenerują Ramki AI</h2>
+      <p class="calc-sub">Wpisz dane sklepu — parametry rekomendacji możesz dostroić poniżej.</p>
+
+      <div class="field-shop">
+        <label for="shopName">Dla jakiej firmy liczymy?</label>
+        <input id="shopName" type="text" placeholder="np. mojsklep.pl" autocomplete="off" />
+      </div>
+
+      <div class="field">
+        <div class="slider-head">
+          <span class="caption">Ruch miesięczny (unikalni użytkownicy)</span>
+          <span class="slider-value" id="visitorsDisplay">100 000</span>
+        </div>
+        <input id="visitors" type="range" min="1000" max="2000000" step="1000" value="100000" />
+        <div class="slider-bounds"><span>1 000</span><span>2 000 000</span></div>
+      </div>
+
+      <div class="field">
+        <label for="aov">Średnia wartość zamówienia (AOV) w PLN</label>
+        <input id="aov" type="number" min="0" step="1" placeholder="np. 200" value="200" />
+      </div>
+
+      <details class="params" open>
+        <summary>
+          <span>Parametry ramek <span class="badge-default">benchmark</span></span>
+        </summary>
+        <div class="params-body">
+          <div class="params-grid">
+            <div class="param-block">
+              <label for="frameClickRate">
+                <span class="param-name">Frame click rate</span>
+                <span class="param-val"><span id="frameClickRateVal">6,0</span>%</span>
+              </label>
+              <input id="frameClickRate" type="range" min="0.5" max="15" step="0.1" value="6" />
+              <p class="hint">Na 100 odwiedzających, ilu kliknie produkt z ramki rekomendacji.</p>
+            </div>
+            <div class="param-block">
+              <label for="clickToOrder">
+                <span class="param-name">Click-to-order conversion</span>
+                <span class="param-val"><span id="clickToOrderVal">5,0</span>%</span>
+              </label>
+              <input id="clickToOrder" type="range" min="0.5" max="15" step="0.1" value="5" />
+              <p class="hint">Na 100 klikających w ramkę, ilu złoży zamówienie (w 30 dni).</p>
+            </div>
+          </div>
+          <div class="fixed-pricing">
+            <div class="fixed-pricing-item">
+              <span class="fp-label">Prowizja edrone</span>
+              <span class="fp-value">2,5%</span>
+            </div>
+            <div class="fixed-pricing-item">
+              <span class="fp-label">Kwota minimalna</span>
+              <span class="fp-value">400 zł / mies.</span>
+            </div>
+          </div>
+          <div class="params-actions">
+            <button type="button" class="btn-ghost" id="resetBtn">Przywróć domyślne</button>
+            <button type="button" class="btn-ghost" id="conservativeBtn">Tryb ostrożny</button>
+            <button type="button" class="btn-ghost" id="aggressiveBtn">Tryb agresywny</button>
+          </div>
+        </div>
+      </details>
+
+      <button id="calcBtn" class="cta" type="button">Policz dodatkową sprzedaż →</button>
+      <div id="errorMsg" class="error hidden"></div>
+    </div>
+
+    <div id="resultsBlock" class="hidden">
+      <div class="results-block">
+        <p class="results-for">Wyniki dla</p>
+        <h2 class="results-shop" id="shopHeading">Twojego sklepu</h2>
+        <p class="results-meta" id="shopMeta">Ruch: —  •  AOV: —</p>
+
+        <div class="kpis">
+          <div class="kpi">
+            <p class="kpi-label">Dodatkowe zamówienia / mies.</p>
+            <p class="kpi-value" id="kpiOrders">—</p>
+            <p class="kpi-sub" id="kpiOrdersSub">na podstawie Twoich parametrów</p>
+          </div>
+          <div class="kpi highlight">
+            <p class="kpi-label">Dodatkowy przychód / mies.</p>
+            <p class="kpi-value" id="kpiRevenue">—</p>
+            <p class="kpi-sub" id="kpiRevenueSub">+12 mies. = <span id="kpiAnnual">—</span></p>
+          </div>
+          <div class="kpi">
+            <p class="kpi-label">ROI</p>
+            <p class="kpi-value" id="kpiRoi">—</p>
+            <p class="kpi-sub">zwrot z prowizji edrone</p>
+          </div>
+        </div>
+
+        <div class="breakdown">
+          <h4>Jak to liczymy</h4>
+          <div class="row"><span class="lbl">Ruch miesięczny</span><span class="val" id="brkVisitors">—</span></div>
+          <div class="row"><span class="lbl">× Frame click rate</span><span class="val" id="brkClick">—</span></div>
+          <div class="row"><span class="lbl">= Kliknięcia w ramki</span><span class="val" id="brkClicks">—</span></div>
+          <div class="row"><span class="lbl">× Click-to-order conversion</span><span class="val" id="brkConv">—</span></div>
+          <div class="row"><span class="lbl">= Dodatkowe zamówienia</span><span class="val" id="brkOrders">—</span></div>
+          <div class="row"><span class="lbl">× AOV</span><span class="val" id="brkAov">—</span></div>
+          <div class="row total"><span class="lbl">= Dodatkowy przychód</span><span class="val" id="brkRevenue">—</span></div>
+          <div class="row commission">
+            <span class="lbl">
+              💰 Prowizja edrone
+              <small><span id="brkCommissionPct">2,5</span>% od przypisanej sprzedaży, min. <span id="brkMin">400</span> zł / mies.</small>
+            </span>
+            <span class="val" id="brkCost">—</span>
+          </div>
+          <div class="row total"><span class="lbl">= Twój zysk netto</span><span class="val" id="brkNet">—</span></div>
+        </div>
+
+        <div class="results-summary">
+          <span>📈 Wzrost AOV nawet o <strong>+37%</strong></span>
+          <span>⚡ Zwrot z prowizji <strong>50–100×</strong></span>
+          <span>🎯 31–35% przychodu w e-commerce <strong>pochodzi z rekomendacji</strong></span>
+        </div>
+
+        <div class="results-cta">
+          <div class="copy">
+            Tyle <span id="ctaShopName">Twój sklep</span> może dodatkowo zarabiać każdego miesiąca.
+            <span class="small">Uruchom Ramki Rekomendacji AI w edrone — pierwsze zamówienia jeszcze w tym tygodniu.</span>
+          </div>
+          <button type="button" id="bookBtn">Włącz ramki</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS / SOCIAL PROOF -->
+    <section class="section">
+      <div class="section-header">
+        <span class="eyebrow">Dowody</span>
+        <h2>Rekomendacje to nie <em>„nice to have"</em></h2>
+        <p class="section-lead">Największa sprzedaż nie dzieje się wtedy, gdy masz więcej ruchu — tylko wtedy, gdy klient widzi <strong>właściwy produkt we właściwym momencie</strong>. Liczby są bezlitosne:</p>
+      </div>
+      <div class="stats">
+        <div class="stat">
+          <p class="num"><em>31–35%</em></p>
+          <p class="desc">przychodu w e-commerce pochodzi z rekomendacji</p>
+          <p class="src">Amazon, McKinsey</p>
+        </div>
+        <div class="stat">
+          <p class="num"><em>75%</em></p>
+          <p class="desc">klientów jest skłonnych kupić dzięki rekomendacjom</p>
+          <p class="src">Amazon</p>
+        </div>
+        <div class="stat">
+          <p class="num"><em>49%</em></p>
+          <p class="desc">kupujących dokonało spontanicznego zakupu z rekomendacji</p>
+          <p class="src">Salesforce</p>
+        </div>
+        <div class="stat">
+          <p class="num"><em>+37%</em></p>
+          <p class="desc">wzrost wartości koszyka po wdrożeniu ramek</p>
+          <p class="src">benchmark edrone</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROBLEM SECTION -->
+    <section class="section">
+      <div class="section-header">
+        <span class="eyebrow">Problem</span>
+        <h2>Sklepy tracą <em>sprzedaż</em> każdego dnia</h2>
+        <p class="section-lead">Nie dlatego, że klienci nie chcą kupować. Dlatego, że poddają się, zanim znajdą to, co pasuje.</p>
+      </div>
+      <div class="reason-grid">
+        <div class="reason-card">
+          <h3>Klient nie znajduje produktu i wychodzi</h3>
+          <p>Większość kupujących nigdy nie widzi 90% Twojego katalogu. Klikną raz, dwa — i opuszczają sklep.</p>
+        </div>
+        <div class="reason-card">
+          <h3>Brak produktów komplementarnych</h3>
+          <p>Klient kupuje aparat — nikt nie pokazuje mu karty pamięci ani torby. Zostawia 30% wartości koszyka na stole.</p>
+        </div>
+        <div class="reason-card">
+          <h3>„Ślepe uliczki": 404, brak towaru</h3>
+          <p>Strony bez wyników, niedostępne produkty, błędne linki. Każda taka strona to klient wracający do Google.</p>
+        </div>
+        <div class="reason-card">
+          <h3>Wszyscy widzą to samo</h3>
+          <p>Statyczne bestsellery, ręcznie ustawiane „polecane". Klient w 2026 oczekuje doświadczenia jak Netflix — spersonalizowanego.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT YOU GET -->
+    <section class="section">
+      <div class="section-header">
+        <span class="eyebrow">Rozwiązanie</span>
+        <h2>Co dostajesz w <em>Ramkach rekomendacji AI</em></h2>
+        <p class="section-lead">To nie jest lista produktów. To <strong>silnik decyzji zakupowych</strong> w czasie rzeczywistym — działający 24/7.</p>
+      </div>
+      <div class="algos">
+        <div class="algo">
+          <div class="icon">🧠</div>
+          <div>
+            <h3>4 algorytmy AI jednocześnie</h3>
+            <p>Cross-sell, up-sell, rekomendacje behawioralne, personalizacja 1:1. Każdy odwiedzający widzi produkty z największą szansą zakupu.</p>
+          </div>
+        </div>
+        <div class="algo">
+          <div class="icon">🎨</div>
+          <div>
+            <h3>Zero wdrożenia</h3>
+            <p>Automatyczne dopasowanie do designu sklepu. Bez HTML-a, bez developera. Gotowe w kilka minut.</p>
+          </div>
+        </div>
+        <div class="algo">
+          <div class="icon">📦</div>
+          <div>
+            <h3>Elastyczność</h3>
+            <p>Do 12 produktów w ramce. Różne układy: karuzela, siatka, lista. Dopasujesz się do każdego placementu.</p>
+          </div>
+        </div>
+        <div class="algo">
+          <div class="icon">⚡</div>
+          <div>
+            <h3>Realne dane edrone</h3>
+            <p>Część edrone — rekomendacje działają od razu na realnych danych o zachowaniu Twoich klientów. Bez integracji, bez czekania.</p>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 24px;">
+        <p style="font-size: 14px; color: var(--muted); margin: 0 0 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;">Dokładnie tam, gdzie klient podejmuje decyzję:</p>
+        <div class="placements">
+          <span class="placement">Strona główna</span>
+          <span class="placement">Karta produktu</span>
+          <span class="placement">Koszyk</span>
+          <span class="placement">Kategorie</span>
+          <span class="placement">Strona 404</span>
+          <span class="placement">Thank you page</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREENS / EDRONE PRODUCT -->
+    <section class="section">
+      <div class="section-header">
+        <span class="eyebrow">Tak to wygląda</span>
+        <h2>Ramki rekomendacji AI w panelu <em>edrone</em></h2>
+        <p class="section-lead">Trzy proste kroki: wybierz miejsce, wybierz algorytm, dopasuj wygląd. <strong>Bez kodu, bez developera</strong> — gotowe w 15 minut.</p>
+      </div>
+
+      <div class="screens-grid">
+        <div class="screen-card">
+          <div class="browser-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="url">twojsklep.pl/produkt/koszulka-szalwiowa</span>
+          </div>
+          <div class="screen-body has-image">
+            <img src="../assets/polecane.png" alt="Ramka rekomendacji 'Polecane dla Ciebie' z karuzelą produktów" />
+          </div>
+          <div class="screen-caption">
+            <h4>Tak ramka wygląda u Twoich klientów</h4>
+            <p>Karuzela z produktami dobranymi przez AI dla każdego odwiedzającego — automatycznie dopasowana do designu sklepu.</p>
+          </div>
+        </div>
+
+        <div class="screen-card">
+          <div class="browser-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="url">app.edrone.me / Ramki / Konfiguracja</span>
+          </div>
+          <div class="screen-body has-image">
+            <img src="../assets/dobierz-produkty.png" alt="Ekran 'Dobierz produkty do ramki' w panelu edrone" />
+          </div>
+          <div class="screen-caption">
+            <h4>6 strategii rekomendacji w jednym kliknięciu</h4>
+            <p>AI dobiera dla Ciebie, albo decydujesz Ty. Możesz mieszać strategie pomiędzy ramkami.</p>
+          </div>
+        </div>
+
+        <div class="screen-card mockup-setup">
+          <div class="browser-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="url">app.edrone.me / Rozpocznij konfigurację</span>
+          </div>
+          <div class="screen-body has-image">
+            <img src="../assets/setup-3-kroki.png" alt="Rozpocznij konfigurację ramki rekomendacji AI — 3 kroki: rozpocznij, wskaż miejsce, dostosuj" />
+          </div>
+          <div style="display:none">
+            <div class="steps">
+              <div class="step">
+                <span class="num">1</span>
+                <div class="preview">
+                  <div class="lines"><div></div><div></div><div></div></div>
+                </div>
+                <h6>Rozpocznij konfigurację</h6>
+                <p>Kliknij przycisk — otwieramy Twój sklep, abyś wskazał miejsce dla ramki.</p>
+              </div>
+              <div class="step">
+                <span class="num">2</span>
+                <div class="preview">
+                  <div class="lines"><div></div><div></div><div></div></div>
+                  <span class="pill-cta">Wskaż miejsce</span>
+                </div>
+                <h6>Wskaż miejsce na stronie</h6>
+                <p>Przejdź do strony, na której chcesz wyświetlać ramkę — i wskaż miejsce, w którym ma się pojawić.</p>
+              </div>
+              <div class="step">
+                <span class="num">3</span>
+                <div class="preview">
+                  <div class="lines" style="display:flex; gap:4px; width:80%;">
+                    <div style="flex:1; height:30px; background:#E8E8EE; border-radius:3px;"></div>
+                    <div style="flex:1; height:30px; background:#E8E8EE; border-radius:3px;"></div>
+                    <div style="flex:1; height:30px; background:#E8E8EE; border-radius:3px;"></div>
+                  </div>
+                </div>
+                <h6>Dostosuj ustawienia</h6>
+                <p>Wybierz produkty i dostosuj wygląd ramki — dopasuje się do designu sklepu automatycznie.</p>
+              </div>
+            </div>
+          </div>
+          <div class="screen-caption">
+            <h4>Wdrożenie w 15 minut — bez developera</h4>
+            <p>Klikasz, wskazujesz miejsce, wybierasz strategię. Gotowe. Pierwsze przypisane zamówienia jeszcze w tym samym tygodniu.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="section">
+      <div class="section-header">
+        <span class="eyebrow">Cennik</span>
+        <h2>Prosty i <em>przejrzysty</em> model</h2>
+        <p class="section-lead">Płacisz <strong>tylko za efekt</strong>. Bez CPC, bez CPM, bez długoterminowych umów.</p>
+      </div>
+      <table class="pricing-table">
+        <thead>
+          <tr><th>Za co płacisz</th><th>Stawka</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Bazowa opłata miesięczna</td><td><strong>400 zł netto</strong></td></tr>
+          <tr><td>Prowizja od zamówień przypisanych do ramek</td><td><strong>2,5%</strong></td></tr>
+          <tr><td>Model atrybucji</td><td><strong>30 dni</strong> od interakcji z ramką</td></tr>
+          <tr><td>Wdrożenie, wyświetlenia, kliknięcia, zamówienia bez atrybucji</td><td><strong>0 zł</strong></td></tr>
+          <tr><td>Dowolna liczba ramek (placementów)</td><td><strong>0 zł</strong></td></tr>
+        </tbody>
+      </table>
+      <p class="pricing-note">Minimum 400 zł / mies. pokrywa obsługę. Jeśli prowizja przekroczy minimum, nadwyżka liczy się w kolejnym okresie. Minimum z góry, prowizja z dołu. <strong>Bez ukrytych kosztów, bez „pakietów"</strong>.</p>
+    </section>
+
+    <!-- WHY IT PAYS -->
+    <section class="section">
+      <div class="section-header">
+        <span class="eyebrow">ROI</span>
+        <h2>Dlaczego to <em>się opłaca</em></h2>
+      </div>
+      <div class="reason-grid">
+        <div class="reason-card solution">
+          <h3>Płacisz za efekt, nie za obietnice</h3>
+          <p>Prowizja jest bezpośrednio powiązana ze sprzedażą przypisaną. Brak sprzedaży = brak prowizji. Tak proste.</p>
+        </div>
+        <div class="reason-card solution">
+          <h3>Realny ROI: 50–100×</h3>
+          <p>Płacisz ułamek tego, co ramki przynoszą. Sklepy osiągają typowo <strong>50–100× zwrotu</strong> z wypłaconej prowizji.</p>
+        </div>
+        <div class="reason-card solution">
+          <h3>Używaj tylu ramek, ile chcesz</h3>
+          <p>Strona główna, kategorie, produkty, koszyk, 404 — więcej miejsc, więcej przypisanej sprzedaży. Bez opłat za widget.</p>
+        </div>
+        <div class="reason-card solution">
+          <h3>Standard nowoczesnego e-commerce</h3>
+          <p>Amazon, Zalando, Allegro — duża część ich sprzedaży opiera się właśnie na rekomendacjach. Ich brak = stracony potencjał.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section faq">
+      <div class="section-header">
+        <span class="eyebrow">FAQ</span>
+        <h2>Najczęstsze <em>pytania</em></h2>
+      </div>
+      <details>
+        <summary>Skąd biorą się domyślne wartości frame click rate i conversion?</summary>
+        <p>Z benchmarków aktywnych klientów edrone, którzy mają wdrożone Ramki Rekomendacji AI. Wartości domyślne (6% click rate, 5% click-to-order) odpowiadają środkowi rozkładu — Twój sklep może być wyżej lub niżej, dlatego suwaki pozwalają to dostroić.</p>
+      </details>
+      <details>
+        <summary>Chcę wielu ramek. Czy zapłacę więcej?</summary>
+        <p>Nie. Używaj tylu ramek, ile chcesz — strona główna, kategorie, strony produktów, koszyk. Prowizję płacisz od <strong>przypisanego zamówienia</strong>, a nie od ramki. Jedno zamówienie dotknięte przez kilka ramek nadal liczy się raz.</p>
+      </details>
+      <details>
+        <summary>Co liczy się jako zamówienie przypisane?</summary>
+        <p>Kupujący klika dowolny produkt w ramce rekomendacji i kupuje <strong>dowolny produkt</strong> w Twoim sklepie w ciągu <strong>30 dni</strong>. Nie musi to być produkt, w który kliknął.</p>
+      </details>
+      <details>
+        <summary>Ile trwa wdrożenie?</summary>
+        <p><strong>15 minut.</strong> Włączasz ramki w panelu edrone — algorytmy AI od razu czerpią z realnych danych Twojego sklepu. Pierwsze zamówienia przypisane do ramek pojawiają się zwykle jeszcze w tym samym tygodniu.</p>
+      </details>
+      <details>
+        <summary>Jak zacząć?</summary>
+        <p>Włącz ramki w koncie edrone — w panelu wybierz miejsce na stronie, strategię rekomendacji (Smart, bestsellery, promocje, ostatnio oglądane, …) i gotowe. Bez kodowania, bez developera. Pierwsze przypisane zamówienia zwykle pojawiają się jeszcze w tym samym tygodniu.</p>
+      </details>
+      <details>
+        <summary>Mam wiele sklepów / workspace'ów. Jak jestem rozliczany?</summary>
+        <p>Opłata minimalna dotyczy każdego workspace'u (każdego trackera), zgodnie z Twoją obecną strukturą licencji edrone.</p>
+      </details>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="cta-section">
+      <h2 id="finalCtaHeader">Nie odkładaj przychodu na później.</h2>
+      <p>Masz już silnik AI edrone, który codziennie zarabia dla Ciebie na e-mailu, SMS-ie i automatyzacjach. Czas włączyć piąty bieg — Ramki Rekomendacji.</p>
+      <div class="timing">
+        <div>⚡ Instalacja: <strong>15 minut</strong></div>
+        <div>📦 Pierwsze zamówienia: <strong>w tym tygodniu</strong></div>
+        <div>💰 Płacisz tylko za <strong>efekt</strong></div>
+      </div>
+    </section>
+
+    <footer id="footer">Ładowanie danych…</footer>
+  </main>
+
+<script>
+(function () {
+  const DATA_URL = "../data/frames-benchmarks-public.json";
+  const LOCALE = "pl-PL";
+
+  const COMMISSION = 0.025;
+  const MIN_BILLING = 400;
+
+  const DEFAULTS = {
+    frameClickRate: 6,
+    clickToOrder: 5,
+  };
+  const PRESETS = {
+    conservative: { frameClickRate: 3, clickToOrder: 3 },
+    aggressive: { frameClickRate: 10, clickToOrder: 8 },
+  };
+
+  const state = { data: null };
+
+  function fmtInt(n) {
+    return new Intl.NumberFormat(LOCALE, { maximumFractionDigits: 0 }).format(n);
+  }
+  function fmtMoney(n) {
+    return fmtInt(Math.round(n)) + " zł";
+  }
+  function fmtPct(n, dp = 1) {
+    return n.toFixed(dp).replace(".", ",") + "%";
+  }
+  function fmtDate(iso) {
+    try {
+      return new Intl.DateTimeFormat(LOCALE, { year: "numeric", month: "long", day: "numeric" })
+        .format(new Date(iso));
+    } catch { return iso; }
+  }
+  function showError(msg) {
+    const el = document.getElementById("errorMsg");
+    el.textContent = msg;
+    el.classList.remove("hidden");
+  }
+  function clearError() {
+    document.getElementById("errorMsg").classList.add("hidden");
+  }
+  function $(id) { return document.getElementById(id); }
+
+  function readNumber(id) { return Number($(id).value); }
+
+  function applyPreset(p) {
+    $("frameClickRate").value = p.frameClickRate;
+    $("clickToOrder").value = p.clickToOrder;
+    syncDisplays();
+    if (!$("resultsBlock").classList.contains("hidden")) calculate({ scroll: false });
+  }
+
+  function syncDisplays() {
+    $("visitorsDisplay").textContent = fmtInt(readNumber("visitors"));
+    $("frameClickRateVal").textContent = readNumber("frameClickRate").toFixed(1).replace(".", ",");
+    $("clickToOrderVal").textContent = readNumber("clickToOrder").toFixed(1).replace(".", ",");
+  }
+
+  function calculate(opts) {
+    opts = opts || {};
+    clearError();
+    const shop = $("shopName").value.trim();
+    const visitors = readNumber("visitors");
+    const aov = readNumber("aov");
+    const frameClickRate = readNumber("frameClickRate") / 100;
+    const clickToOrder = readNumber("clickToOrder") / 100;
+
+    if (!Number.isFinite(visitors) || visitors <= 0) { showError("Podaj ruch miesięczny większy od zera."); return; }
+    if (!Number.isFinite(aov) || aov <= 0) { showError("Podaj AOV większy od zera."); return; }
+
+    const clicks = visitors * frameClickRate;
+    const orders = clicks * clickToOrder;
+    const revenue = orders * aov;
+    const cost = Math.max(revenue * COMMISSION, MIN_BILLING);
+    const net = revenue - cost;
+    const roi = cost > 0 ? revenue / cost : 0;
+
+    const shopName = shop || "Twojego sklepu";
+    $("shopHeading").textContent = shopName;
+    $("ctaShopName").textContent = shop ? shop : "Twój sklep";
+    $("shopMeta").textContent =
+      "Ruch: " + fmtInt(visitors) + " / mies.  •  AOV: " + fmtMoney(aov);
+
+    $("kpiOrders").textContent = "+" + fmtInt(orders);
+    $("kpiRevenue").textContent = "+" + fmtMoney(revenue);
+    $("kpiAnnual").textContent = "+" + fmtMoney(revenue * 12);
+    $("kpiRoi").textContent = fmtInt(roi) + "×";
+
+    $("brkVisitors").textContent = fmtInt(visitors);
+    $("brkClick").textContent = fmtPct(frameClickRate * 100, 1);
+    $("brkClicks").textContent = fmtInt(clicks);
+    $("brkConv").textContent = fmtPct(clickToOrder * 100, 1);
+    $("brkOrders").textContent = fmtInt(orders);
+    $("brkAov").textContent = fmtMoney(aov);
+    $("brkRevenue").textContent = "+" + fmtMoney(revenue);
+    $("brkCommissionPct").textContent = (COMMISSION * 100).toFixed(1).replace(".", ",");
+    $("brkMin").textContent = fmtInt(MIN_BILLING);
+    $("brkCost").textContent = fmtMoney(cost);
+    $("brkNet").textContent = "+" + fmtMoney(net);
+
+    $("finalCtaHeader").textContent = shop
+      ? "Włącz ramki dla " + shop + "."
+      : "Nie odkładaj przychodu na później.";
+
+    const block = $("resultsBlock");
+    const wasHidden = block.classList.contains("hidden");
+    block.classList.remove("hidden");
+    if (opts.scroll !== false && wasHidden) {
+      block.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
+  // wire up live displays — recalc in place without scrolling
+  ["visitors", "frameClickRate", "clickToOrder"].forEach((id) => {
+    $(id).addEventListener("input", () => {
+      syncDisplays();
+      if (!$("resultsBlock").classList.contains("hidden")) calculate({ scroll: false });
+    });
+  });
+  syncDisplays();
+
+  $("calcBtn").addEventListener("click", () => calculate());
+  document.querySelectorAll("input[type='text'], input[type='number']").forEach((i) => {
+    i.addEventListener("keydown", (e) => { if (e.key === "Enter") calculate(); });
+    i.addEventListener("input", () => {
+      if (!$("resultsBlock").classList.contains("hidden")) calculate({ scroll: false });
+    });
+  });
+
+  $("resetBtn").addEventListener("click", () => applyPreset(DEFAULTS));
+  $("conservativeBtn").addEventListener("click", () => applyPreset(PRESETS.conservative));
+  $("aggressiveBtn").addEventListener("click", () => applyPreset(PRESETS.aggressive));
+
+  $("bookBtn").addEventListener("click", () => {
+    document.querySelector(".cta-section").scrollIntoView({ behavior: "smooth" });
+  });
+
+  fetch(DATA_URL, { cache: "no-store" })
+    .then((r) => r.json())
+    .then((data) => {
+      state.data = data;
+      $("footer").textContent =
+        "Domyślne parametry oparte o benchmark edrone (N=" + data.cohorts.pl.n + " aktywnych polskich klientów). Dane z " + fmtDate(data.generated_at) + ".";
+    })
+    .catch(() => {
+      $("footer").textContent = "Domyślne parametry oparte o benchmark edrone z aktywnych klientów PL.";
+    });
+})();
+</script>
+</body>
+</html>
