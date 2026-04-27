@@ -505,6 +505,41 @@
     margin: 8px 0 0;
   }
   .kpi.highlight .kpi-sub { color: rgba(30,30,30,0.75); }
+  .kpi-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 0 0 10px;
+    flex-wrap: wrap;
+  }
+  .kpi-header .kpi-label { margin: 0; }
+  .kpi-toggle {
+    display: inline-flex;
+    background: rgba(30,30,30,0.12);
+    border-radius: 999px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .kpi-toggle button {
+    background: transparent;
+    border: none;
+    padding: 5px 12px;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(30,30,30,0.65);
+    cursor: pointer;
+    border-radius: 999px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .kpi-toggle button:hover { color: rgba(30,30,30,0.95); }
+  .kpi-toggle button.active {
+    background: var(--text);
+    color: var(--accent);
+  }
 
   .breakdown {
     background: rgba(255,255,255,0.04);
@@ -561,6 +596,35 @@
     font-weight: 800;
     letter-spacing: -0.01em;
   }
+  .breakdown .row.net {
+    margin: 12px -22px 0;
+    padding: 18px 22px;
+    background: rgba(236, 255, 90, 0.18);
+    border: 1.5px solid var(--accent);
+    border-radius: 10px;
+    font-size: 17px;
+    align-items: center;
+  }
+  .breakdown .row.net .lbl {
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 16px;
+    letter-spacing: 0.01em;
+  }
+  .breakdown .row.net .lbl small {
+    display: block;
+    font-size: 11px;
+    color: var(--muted-dark);
+    font-weight: 500;
+    margin-top: 2px;
+    letter-spacing: 0;
+  }
+  .breakdown .row.net .val {
+    color: var(--accent);
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.015em;
+  }
 
   .results-summary {
     display: flex;
@@ -575,41 +639,53 @@
   .results-summary strong { color: var(--accent); font-weight: 800; }
 
   .results-cta {
-    margin: 18px -32px -8px;
-    padding: 22px 32px;
+    margin: 24px -32px -8px;
+    padding: 32px;
     background: var(--accent);
     color: var(--text);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 18px;
+    gap: 24px;
     flex-wrap: wrap;
   }
   @media (max-width: 760px) {
-    .results-cta { margin: 18px -22px -8px; padding: 20px 22px; }
+    .results-cta { margin: 24px -22px -8px; padding: 26px 22px; }
   }
-  .results-cta .copy { font-weight: 700; font-size: 15px; max-width: 460px; }
+  .results-cta .copy { font-weight: 700; font-size: 17px; max-width: 480px; line-height: 1.4; }
   .results-cta .small {
     display: block;
     font-weight: 500;
-    font-size: 13px;
-    color: rgba(30,30,30,0.7);
-    margin-top: 2px;
+    font-size: 14px;
+    color: rgba(30,30,30,0.75);
+    margin-top: 6px;
+    line-height: 1.5;
   }
   .results-cta button {
     background: var(--text);
     color: var(--accent);
     border: none;
-    padding: 12px 22px;
+    padding: 18px 36px;
     font-weight: 800;
-    font-size: 14px;
-    border-radius: 8px;
+    font-size: 16px;
+    border-radius: 10px;
     cursor: pointer;
     font-family: inherit;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
+    box-shadow: 4px 4px 0 rgba(30,30,30,0.18);
+    transition: transform 0.08s, box-shadow 0.08s;
+    flex-shrink: 0;
   }
-  .results-cta button:hover { filter: brightness(1.1); }
+  .results-cta button:hover {
+    filter: brightness(1.1);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 rgba(30,30,30,0.22);
+  }
+  .results-cta button:active {
+    transform: translate(0, 0);
+    box-shadow: 2px 2px 0 rgba(30,30,30,0.18);
+  }
 
   /* SECTIONS */
   .section { margin-top: 80px; }
@@ -1186,6 +1262,33 @@
     position: relative;
   }
   .cta-section .timing strong { color: var(--accent); }
+  .cta-section-btn {
+    margin-top: 32px;
+    background: var(--accent);
+    color: var(--text);
+    border: none;
+    padding: 18px 40px;
+    font-weight: 800;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.4);
+    transition: transform 0.08s, box-shadow 0.08s;
+    position: relative;
+    z-index: 1;
+  }
+  .cta-section-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 rgba(0,0,0,0.4);
+    filter: brightness(1.05);
+  }
+  .cta-section-btn:active {
+    transform: translate(0, 0);
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.4);
+  }
   @media (max-width: 640px) {
     .cta-section { padding: 40px 24px; }
     .cta-section h2 { font-size: 26px; }
@@ -1231,7 +1334,7 @@
 
       <div class="field">
         <div class="slider-head">
-          <span class="caption">Ruch miesięczny (unikalni użytkownicy)</span>
+          <span class="caption">Ruch miesięczny (liczba odsłon Twojej strony)</span>
           <span class="slider-value" id="visitorsDisplay">100 000</span>
         </div>
         <input id="visitors" type="range" min="1000" max="2000000" step="1000" value="100000" />
@@ -1260,9 +1363,9 @@
             <div class="param-block">
               <label for="clickToOrder">
                 <span class="param-name">Click-to-order conversion</span>
-                <span class="param-val"><span id="clickToOrderVal">5,0</span>%</span>
+                <span class="param-val"><span id="clickToOrderVal">3,0</span>%</span>
               </label>
-              <input id="clickToOrder" type="range" min="0.5" max="15" step="0.1" value="5" />
+              <input id="clickToOrder" type="range" min="0.5" max="15" step="0.1" value="3" />
               <p class="hint">Na 100 klikających w ramkę, ilu złoży zamówienie (w 30 dni).</p>
             </div>
           </div>
@@ -1301,9 +1404,14 @@
             <p class="kpi-sub" id="kpiOrdersSub">na podstawie Twoich parametrów</p>
           </div>
           <div class="kpi highlight">
-            <p class="kpi-label">Dodatkowy przychód / mies.</p>
+            <div class="kpi-header">
+              <p class="kpi-label">Dodatkowy przychód</p>
+              <div class="kpi-toggle" role="tablist" aria-label="Zakres czasu">
+                <button type="button" class="active" data-period="month" role="tab" aria-selected="true">/ mies.</button>
+                <button type="button" data-period="year" role="tab" aria-selected="false">/ rok</button>
+              </div>
+            </div>
             <p class="kpi-value" id="kpiRevenue">—</p>
-            <p class="kpi-sub" id="kpiRevenueSub">+12 mies. = <span id="kpiAnnual">—</span></p>
           </div>
           <div class="kpi">
             <p class="kpi-label">ROI</p>
@@ -1328,7 +1436,13 @@
             </span>
             <span class="val" id="brkCost">—</span>
           </div>
-          <div class="row total"><span class="lbl">= Twój zysk netto</span><span class="val" id="brkNet">—</span></div>
+          <div class="row net">
+            <span class="lbl">
+              ✅ Twój zysk netto
+              <small>po odliczeniu prowizji edrone</small>
+            </span>
+            <span class="val" id="brkNet">—</span>
+          </div>
         </div>
 
         <div class="results-summary">
@@ -1555,7 +1669,7 @@
         <tbody>
           <tr><td>Bazowa opłata miesięczna</td><td><strong>400 zł netto</strong></td></tr>
           <tr><td>Prowizja od zamówień przypisanych do ramek</td><td><strong>2,5%</strong></td></tr>
-          <tr><td>Model atrybucji</td><td><strong>30 dni</strong> od interakcji z ramką</td></tr>
+          <tr><td>Model atrybucji</td><td><strong>zamówienie złożone 30 dni</strong> od interakcji z ramką</td></tr>
           <tr><td>Wdrożenie, wyświetlenia, kliknięcia, zamówienia bez atrybucji</td><td><strong>0 zł</strong></td></tr>
           <tr><td>Dowolna liczba ramek (placementów)</td><td><strong>0 zł</strong></td></tr>
         </tbody>
@@ -1568,6 +1682,7 @@
       <div class="section-header">
         <span class="eyebrow">ROI</span>
         <h2>Dlaczego to <em>się opłaca</em></h2>
+        <p class="section-lead">Trzy proste kroki: <strong>wybierz miejsce, wybierz algorytm, dopasuj wygląd</strong>. Bez kodu, bez developera — gotowe w 15 minut.</p>
       </div>
       <div class="reason-grid">
         <div class="reason-card solution">
@@ -1597,7 +1712,7 @@
       </div>
       <details>
         <summary>Skąd biorą się domyślne wartości frame click rate i conversion?</summary>
-        <p>Z benchmarków aktywnych klientów edrone, którzy mają wdrożone Ramki Rekomendacji AI. Wartości domyślne (6% click rate, 5% click-to-order) odpowiadają środkowi rozkładu — Twój sklep może być wyżej lub niżej, dlatego suwaki pozwalają to dostroić.</p>
+        <p>Z benchmarków aktywnych klientów edrone, którzy mają wdrożone Ramki Rekomendacji AI. Wartości domyślne (6% click rate, 3% click-to-order) odpowiadają środkowi rozkładu — Twój sklep może być wyżej lub niżej, dlatego suwaki pozwalają to dostroić.</p>
       </details>
       <details>
         <summary>Chcę wielu ramek. Czy zapłacę więcej?</summary>
@@ -1630,6 +1745,7 @@
         <div>📦 Pierwsze zamówienia: <strong>w tym tygodniu</strong></div>
         <div>💰 Płacisz tylko za <strong>efekt</strong></div>
       </div>
+      <button type="button" id="finalBookBtn" class="cta-section-btn">Włącz ramki</button>
     </section>
 
     <footer id="footer">Ładowanie danych…</footer>
@@ -1645,14 +1761,14 @@
 
   const DEFAULTS = {
     frameClickRate: 6,
-    clickToOrder: 5,
+    clickToOrder: 3,
   };
   const PRESETS = {
-    conservative: { frameClickRate: 3, clickToOrder: 3 },
-    aggressive: { frameClickRate: 10, clickToOrder: 8 },
+    conservative: { frameClickRate: 3, clickToOrder: 1 },
+    aggressive: { frameClickRate: 10, clickToOrder: 5 },
   };
 
-  const state = { data: null };
+  const state = { data: null, period: "month", lastRevenue: 0 };
 
   function fmtInt(n) {
     return new Intl.NumberFormat(LOCALE, { maximumFractionDigits: 0 }).format(n);
@@ -1720,8 +1836,8 @@
       "Ruch: " + fmtInt(visitors) + " / mies.  •  AOV: " + fmtMoney(aov);
 
     $("kpiOrders").textContent = "+" + fmtInt(orders);
-    $("kpiRevenue").textContent = "+" + fmtMoney(revenue);
-    $("kpiAnnual").textContent = "+" + fmtMoney(revenue * 12);
+    state.lastRevenue = revenue;
+    renderRevenueKpi();
     $("kpiRoi").textContent = fmtInt(roi) + "×";
 
     $("brkVisitors").textContent = fmtInt(visitors);
@@ -1771,6 +1887,30 @@
 
   $("bookBtn").addEventListener("click", () => {
     document.querySelector(".cta-section").scrollIntoView({ behavior: "smooth" });
+  });
+  const finalBtn = $("finalBookBtn");
+  if (finalBtn) {
+    finalBtn.addEventListener("click", () => {
+      document.querySelector(".calc-wrap").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
+  function renderRevenueKpi() {
+    const multiplier = state.period === "year" ? 12 : 1;
+    $("kpiRevenue").textContent = "+" + fmtMoney(state.lastRevenue * multiplier);
+  }
+  document.querySelectorAll(".kpi-toggle button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const group = btn.parentElement;
+      group.querySelectorAll("button").forEach((b) => {
+        b.classList.remove("active");
+        b.setAttribute("aria-selected", "false");
+      });
+      btn.classList.add("active");
+      btn.setAttribute("aria-selected", "true");
+      state.period = btn.dataset.period;
+      renderRevenueKpi();
+    });
   });
 
   fetch(DATA_URL, { cache: "no-store" })
